@@ -1,12 +1,25 @@
 import socket
 
+HOST = socket.gethostname()
+PORT = 2112
+
+#Creating socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((socket.gethostname(),15200))
+
+# Binding
+try:
+    s.bind((HOST,PORT))
+except socket.error:
+    print("Bind failed")
+
+# Connect to client
 s.listen(5)
+client, adress = s.accept()
+print(f"Connection from {adress} has been made!")
 
+# Recieve data
 while True:
-    clientsocket, adress = s.accept()
-    print(f"Connection from {adress} has been made!")
-    clientsocket.send(bytes("Welcome to the server!", "utf-8"))
-
+    data = s.recv(1024)
+    print(data.decode("ASCII")"\n")
+    
 
