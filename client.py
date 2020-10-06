@@ -1,14 +1,26 @@
 import socket
 
-HOST = socket.gethostname()
-PORT = 2113
+HOST = "169.254.93.123"
+PORT = 2112
+ADDRESS = (HOST, PORT)
+BUFFER = 64
+FORMAT = 'ascii'
 
 with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s:
-    
+    print("Socket created")
+
     # Connect
-    s.connect((HOST, PORT))
-    
+    try:
+        s.connect(ADDRESS)
+        print("Connected to :",HOST)
+    except socket.error:
+        print("Connection failed")
+
+    msg = b'\x02sEN LMDscandata 1\x03\0' 
+    s.send(msg)
     # Receive data
     while True:
-    data = s.recv(1024)
-    print("Received: ", repr(data)"\n")
+        data = s.recv(BUFFER)
+
+
+
