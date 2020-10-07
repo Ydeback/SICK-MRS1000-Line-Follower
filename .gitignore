@@ -1,3 +1,4 @@
 .env
 *.swp
 *.un~
+__pycache__/
