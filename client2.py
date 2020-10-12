@@ -5,6 +5,8 @@ import numpy as np
 HOST = "169.254.93.123"
 PORT = 2112
 ADDRESS = (HOST,PORT)
+START_ANGLE = 0.08726646259
+STOP_ANGLE = -0.08726646259
 
 def parse_number(data):
     if b'+' in data or b'-' in data:
@@ -39,7 +41,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         data = s.recv(2048)
         print('ASCII:', data)
 
-        if len(data) < 30: #Ignorera första strängen som skickas
+        if len(data) < 30: #Ignore 30 first data points of the input
             continue
         else:
             data = data.split(b' ')
@@ -49,9 +51,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             dist = [parse_number(x) / 1000 for x in data[26:26+number]]
             print('Distance [m]:', dist)
 
-            arr = np.array(dist)  #gör om dist listan till array
+            arr = np.array(dist)  #Remake the distances to an array
 
-            #Filter som sätter allt efter ett visst avstånd till 0
+            #Filter the distances to only care for the specified interval
             high_threshold = 2.5
             low_threshold = 0.5
 
@@ -59,16 +61,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             arr[arr < low_threshold] = 99
             print(arr)
 
-            index = np.where(arr == np.amin(arr)) #hitta index för det minimala eller maximala avståndet
-            #print(index)
+            index = np.where(arr == np.amin(arr)) #Find the max and/or min
+            value of the accepted distances
             print(arr[index[0]])
 
-            #skala mätpunkterna utifrån vinklarna.
-            angle = np.linspace(0.08726646259, -0.08726646259, number)
+            #Rescale the distances to the measured angles of the LiDAR
+            angle = np.linspace(START_ANGLE, STOP_ANGLE, number)
             print(angle[index[0]])
 
-            #Beräkna position i sidled
+            #Calculate the distance of the object from the centre point of the
+            LiDAR measurement
             x = np.sin(angle)
-            #print(x[index])
             pos = np.multiply(x[index],arr[index[0]])
             print(pos)
