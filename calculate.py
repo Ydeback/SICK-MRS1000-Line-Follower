@@ -26,7 +26,7 @@ def decode_datagram(datagram):
     header['AngularStepWidth'] = dist(items[24])
     header['NumberOfData'] = dist(items[25])
     header['Data'] = [dist(x) / 1000 for x in items[26:26+header['NumberOfData']]]
-
+    print(header['Data'])
     return header
 
 def dist(length):
