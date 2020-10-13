@@ -27,5 +27,5 @@ def connect(): # Connect to the LiDAR
     pass
 
 def startup(): # Load config and connect to LiDAR
-    load_config()
     connect()
+    load_config()

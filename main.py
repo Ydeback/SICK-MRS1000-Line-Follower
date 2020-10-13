@@ -3,3 +3,4 @@
 from packets import *
 
 startup() # System start
+run() # Run the system
