@@ -4,19 +4,21 @@
 #ifndef linux
 #ifndef mac
 
-
-HOST = "169.254.93.123" # Device ip-address
-PORT = 2112 # Commication port
-ADDRESS = (HOST,PORT) # Create Address for the device
-START_ANGLE = 0.08726646259 # Temporary value of start angle (horz)(rad)
-STOP_ANGLE = -0.08726646259 # Temporary value of stop angle (horz)(rad)
+# Device ip-address
+HOST = "169.254.93.123" 
+# Commication port
+PORT = 2112
+# Create Address for the device
+ADDRESS = (HOST,PORT) 
+# Temporary value of start angle (horz)(rad)
+START_ANGLE = 0.08726646259 
+# Temporary value of stop angle (horz)(rad)
+STOP_ANGLE = -0.08726646259 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def load_config(): # Loading the config of the MRS1000c LiDAR 
-    pass
-
-def connect(): # Connect to the LiDAR
+# Connect to the LiDAR
+def connect(): 
     
     try:
         s.connect(ADDRESS)
@@ -26,6 +28,11 @@ def connect(): # Connect to the LiDAR
 
     pass
 
-def startup(): # Load config and connect to LiDAR
+# Loading the config of the MRS1000c LiDAR 
+def load_config(): 
+    pass
+
+# Load config and connect to LiDAR
+def startup(): 
     connect()
     load_config()

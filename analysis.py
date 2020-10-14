@@ -1,9 +1,10 @@
 # Analysis of the preprocessed data for calculations of position
 
-
-def distance(data): # Convert the data to meters
+# Convert the data to meters
+def distance(data): 
     pass
 
-def offset(): # Measure the truck offset from the cables
+# Measure the truck offset from the cables
+def offset(): 
     pass
 
