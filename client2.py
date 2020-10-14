@@ -61,8 +61,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             arr[arr < low_threshold] = 99
             print(arr)
 
-            index = np.where(arr == np.amin(arr)) #Find the max and/or min
-            value of the accepted distances
+            index = np.where(arr == np.amin(arr)) #Find the max and/or min value of the accepted distances
             print(arr[index[0]])
 
             #Rescale the distances to the measured angles of the LiDAR
