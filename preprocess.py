@@ -71,7 +71,7 @@ def toArray():
 
 # Decoding of the received data stream
 def decodeDatagram(datagram):
-    MRS1000 = collections.namedtuple("MRS1000_Datagram", ["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) # "NumberOf8BitChannels", # "Position", # "Name", # "Comment", # "TimeInformation", # "EventInformation"])
+    MRS1000 = collections.namedtuple("MRS1000_Datagram", ["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "Layer",  "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) # "NumberOf8BitChannels", # "Position", # "Name", # "Comment", # "TimeInformation", # "EventInformation"])
 
     items = splitdata(datagram)
 
