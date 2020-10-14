@@ -28,6 +28,7 @@ def connect():
         print("Connected to:", HOST)
     except socket.error as error:
         print("Connection failed: ", error)
+        exit()
 
 # Loading the config of the MRS1000c LiDAR 
 def load_config(): 
