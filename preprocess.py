@@ -5,10 +5,6 @@
 import collections
 import numpy
 
-START_ANGLE = 0.08726646259
-STOP_ANGLE = -0.08726646259
-STX = b'\x02'
-ETX = b'\x03'
 
 # Convert measured data from binary
 def fromBinary(data): 
@@ -18,14 +14,15 @@ def fromBinary(data):
         return int(data, 16)
 
 # Identify the layers from each input
-def layerCheck(data): 
-    if data == b'FE0C':
+def layerCheck():
+    layer = header['Layer']
+    if layer == b'FE0C':
         print("Layer: 4")
-    elif data == b'FF06':
+    elif layer == b'FF06':
         print("Layer: 3")
-    elif data == b'0':
+    elif layer == b'0':
         print("Layer: 2")
-    elif data == b'FA':
+    elif layer == b'FA':
         print("Layer: 1")
 
 # Split the data into datapoints
@@ -47,6 +44,10 @@ def stopAngle():
 # Parse the received data stream and sorting from the start and stop sign of
 # ASCII
 def datagram(received):
+
+    STX = b'\x02'
+    ETX = b'\x03'
+
     while True:
         datagram = b''
 
@@ -61,7 +62,7 @@ def datagram(received):
         yield datagram
 
 # Converts the measured data from millimeters to meters
-def toMeter(milli)
+def toMeter(milli):
     return milli/1000
 
 # Assigns the data to an array variable
@@ -70,7 +71,6 @@ def toArray():
 
 # Decoding of the received data stream
 def decodeDatagram(datagram):
-    
     MRS1000 = collections.namedtuple("MRS1000_Datagram", ["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) # "NumberOf8BitChannels", # "Position", # "Name", # "Comment", # "TimeInformation", # "EventInformation"])
 
     items = splitdata(datagram)
@@ -92,6 +92,7 @@ def decodeDatagram(datagram):
     header['TelegramCounter'] = fromBinary(items[7])
     header['TimeSinceStartup'] = fromBinary(items[9])
     header['TimeOfTransmission'] = fromBinary(items[10])
+    header['Layer'] = item[15]
     header['StartingAngle'] = fromBinary(items[23])
     header['AngularStepWidth'] = fromBinary(items[24])
     header['NumberOfData'] = fromBinary(items[25])
