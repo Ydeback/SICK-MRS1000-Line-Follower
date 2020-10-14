@@ -32,9 +32,6 @@ def layerCheck(data):
 def splitData(data): 
     return data.split(b' ')
 
-# Create a valid interval
-def interval(): 
-
 # Create angular array from measured start and stop angle
 def angle(): 
     return np.linspace(startAngle(), stopAngle(), dataPoints())    
@@ -63,8 +60,13 @@ def datagram(received):
             datagram += byte
         yield datagram
 
+# Converts the measured data from millimeters to meters
 def toMeter(milli)
     return milli/1000
+
+# Assigns the data to an array variable
+def toArray():
+    return np.array(header['Data'])
 
 # Decoding of the received data stream
 def decodeDatagram(datagram):
@@ -108,5 +110,5 @@ def preprocess():
     # Create the array of angles for each data point 
     angle = angle()
 
-    # Create the accepted interval for the data point reading
-    interval = interval()
+    # Create an array of the measrued data in meter
+    data = toArray()
