@@ -4,21 +4,23 @@ from packets import *
 
 # System start
 startup()
+print("Startup done!")
 
-# Take input from the device
-input()
+while True:
+    # Take input from the device
+    data = client()
+    print("client done!")
+    # Preprocess the received data
+    preprocess(data)
+    print("Preprocess done!")
+    # Filter the preprocess the data
+    # filtering()
 
-# Preprocess the received data
-preprocess()
+    # Analyze the filtered data
+    # analysis()
 
-# Filter the preprocess the data
-filter()
+    # Postprocessing of the analyzed data
+    # Postprocess()
 
-# Analyze the filtered data
-analysis()
-
-# Postprocessing of the analyzed data
-Postprocess()
-
-# Visualize the postprocessed data
-visual()
+    # Visualize the postprocessed data
+    # visual()
