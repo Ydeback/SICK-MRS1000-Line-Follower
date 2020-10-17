@@ -37,11 +37,7 @@ def load_config():
     # s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
     pass
 
+# Send data request message
 def run():
     s.send(b'\x02sEN LMDscandata 1\x03\0')
     print("Message sent")
-# Load config and connect to LiDAR
-def startup(): 
-    connect()
-    load_config()
-    run()

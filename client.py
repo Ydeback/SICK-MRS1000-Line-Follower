@@ -4,9 +4,7 @@ from startup import s
 
 BUFFER = 2068
 
+# Receive data sent from device
 def receive():
     return s.recv(BUFFER)
 
-def client():
-    return receive()
-    print("Message stored")

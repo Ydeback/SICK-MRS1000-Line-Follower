@@ -2,7 +2,7 @@
 # Preprocessing of the input data
 #
 
-import collections
+from collections import namedtuple as nt 
 import numpy as np
 
 
@@ -15,7 +15,7 @@ def fromBinary(data):
 
 # Identify the layers from each input
 def layerCheck():
-    layer = header['Layer']
+    layer = header["Layer"]
     if layer == b'FE0C':
         print("Layer: 4")
     elif layer == b'FF06':
@@ -35,34 +35,25 @@ def angle():
     
 # Returns the starting angle of the reading
 def startAngle():
-    return header['StartingAngle']
+    return header["StartingAngle"]
 
 # Returns the stop angle of the reading
 def stopAngle():
-    return header['StartingAngle']+header['AngularStepWidth']*header['NumberOfData']
+    return  header["StartingAngle"]+header["AngularStepWidth"]*header["NumberOfData"]
 
 # Converts the measured data from millimeters to meters
-def toMeter(milli):
-    return milli/1000
-
-# Assigns the data to an array variable
-def toArray():
-    return np.array(header['Data'])
+def toMeter(data):
+    return data/1000
 
 # Decoding of the received data stream
-def decodeDatagram():
-    pass
+def decodeDatagram(data):
+    NamedTuple = nt("MRS1000",["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) 
 
-# Main function of the preprocessing
-def preprocess(received):
-    print(received)
+    datapoints = splitData(b' ')
 
-    # Assign values to the named tuple
-    # header = decodeDatagram()
-    
-    # Create the array of angles for each data point 
-    # angleArray = angle()
+    header = {}
+    header["NumberOfData"] = fromBinary(datapoints[25])
+    header["Data"] = [toMeter(fromBinary(data)) for data in datapoints[26:26+header["NumberOfData"]]]
 
-    # Create an array of the measrued data in meter
-    # dataArray = toArray()
-    
+    return header
+
