@@ -1,7 +1,7 @@
 # Packets for all function of the MRS1000c DHS
 
 from startup import *
-from input import *
+from client import *
 from preprocess import *
 from analysis import *
 from postprocess import *

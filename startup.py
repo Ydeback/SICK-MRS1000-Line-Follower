@@ -4,6 +4,8 @@
 #ifndef linux
 #ifndef mac
 
+import socket
+
 # Device ip-address
 HOST = "169.254.93.123" 
 
@@ -31,10 +33,11 @@ def connect():
         exit()
 
 # Loading the config of the MRS1000c LiDAR 
-def load_config(): 
+def load_config():
+    # s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
     pass
 
-# Load config and connect to LiDAR
-def startup(): 
-    connect()
-    load_config()
+# Send data request message
+def run():
+    s.send(b'\x02sEN LMDscandata 1\x03\0')
+    print("Message sent")

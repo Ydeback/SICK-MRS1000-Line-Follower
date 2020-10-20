@@ -1,24 +1,30 @@
-# Main file of Communication of data from MRS1000c
+# Main file of Communication for data receival from MRS1000c
 
 from packets import *
 
 # System start
-startup()
+connect()
+loadConfig()
+run()
 
-# Take input from the device
-input()
+while True:
+    # Take input from the device
+    data = receive()
 
-# Preprocess the received data
-preprocess()
+    # Preprocess the received data
+    print(data)
+    header = decodeDatagram(data)
+    angle = angle()
+    
 
-# Filter the preprocess the data
-filter()
+    # Filter the preprocess the data
+    # filtering()
 
-# Analyze the filtered data
-analysis()
+    # Analyze the filtered data
+    # analysis()
 
-# Postprocessing of the analyzed data
-Postprocess()
+    # Postprocessing of the analyzed data
+    # Postprocess()
 
-# Visualize the postprocessed data
-visual()
+    # Visualize the postprocessed data
+    # visual()
