@@ -76,8 +76,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.send(msg)
     pos = np.double([0, 0, 0, 0])
 
-    while True:
 
+    while True:
         data = s.recv(2048)
         print('ASCII:', data)
 

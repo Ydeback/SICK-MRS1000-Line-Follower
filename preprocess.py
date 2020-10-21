@@ -14,32 +14,38 @@ def fromBinary(data):
         return int(data, 16)
 
 # Identify the layers from each input
-def layerCheck():
-    layer = header["Layer"]
-    if layer == b'FE0C':
+def layerCheck(header):
+
+    if header["Layer"] == b'FE0C':
         print("Layer: 4")
-    elif layer == b'FF06':
+        return 0
+    elif header["Layer"] == b'FF06':
         print("Layer: 3")
-    elif layer == b'0':
+        return 1
+    elif header["Layer"] == b'0':
         print("Layer: 2")
-    elif layer == b'FA':
+        return 2
+    elif header["Layer"] == b'FA':
         print("Layer: 1")
+        return 3
+
+
 
 # Split the data into datapoints
 def splitData(data): 
     return data.split(b' ')
 
 # Create angular array from measured start and stop angle
-def angle(): 
-    return np.linspace(startAngle(), stopAngle(), dataPoints())    
+def getAngle(header):
+    return np.linspace(startAngle(header), stopAngle(header), header["NumberOfData"])
     
 # Returns the starting angle of the reading
-def startAngle():
+def startAngle(header):
     return header["StartingAngle"]
 
 # Returns the stop angle of the reading
-def stopAngle():
-    return  header["StartingAngle"]+header["AngularStepWidth"]*header["NumberOfData"]
+def stopAngle(header):
+    return  header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
 
 # Converts the measured data from millimeters to meters
 def toMeter(data):
@@ -49,11 +55,14 @@ def toMeter(data):
 def decodeDatagram(data):
     NamedTuple = nt("MRS1000",["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) 
 
-    datapoints = splitData(b' ')
+    datapoints = splitData(data)
 
     header = {}
     header["NumberOfData"] = fromBinary(datapoints[25])
-    header["Data"] = [toMeter(fromBinary(data)) for data in datapoints[26:26+header["NumberOfData"]]]
-
+    header["Data"] = [toMeter(fromBinary(x)) for x in datapoints[26:26+header["NumberOfData"]]]
+    header["StartingAngle"] = 90-fromBinary(datapoints[23])/10000
+    header["AngularStepWidth"] = fromBinary(datapoints[24])/10000
+    header["StopAngle"] = header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
+    header["Layer"] = datapoints[15]
     return header
 

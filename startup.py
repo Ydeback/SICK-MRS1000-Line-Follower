@@ -33,7 +33,7 @@ def connect():
         exit()
 
 # Loading the config of the MRS1000c LiDAR 
-def load_config():
+def loadConfig():
     # s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
     pass
 
@@ -41,3 +41,4 @@ def load_config():
 def run():
     s.send(b'\x02sEN LMDscandata 1\x03\0')
     print("Message sent")
+    trash = s.recv(2064)
