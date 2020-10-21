@@ -1,10 +1,11 @@
 import socket
-import math
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 HOST = "169.254.93.123"
 PORT = 2112
-ADDRESS = (HOST,PORT)
+ADDRESS = (HOST, PORT)
 START_ANGLE = 10 * np.pi /180
 STOP_ANGLE = -10 * np.pi /180
 
@@ -17,16 +18,20 @@ def parse_number(data):
 
 def layercheck(data):
     if data == b'FE0C':
-        print("Layer: 4")
+        #print("Layer: 4")
+        return 0
 
     elif data == b'FF06':
-        print("Layer: 3")
+        #print("Layer: 3")
+        return 1
 
     elif data == b'0':
-        print("Layer: 2")
+        #print("Layer: 2")
+        return 2
 
     elif data == b'FA':
-        print("Layer: 1")
+        #print("Layer: 1")
+        return 3
 
 def Lengthfilter(arr):
     # Filter the distances to only care for the specified interval
@@ -35,27 +40,28 @@ def Lengthfilter(arr):
 
     arr[arr > high_threshold] = 99
     arr[arr < low_threshold] = 99
-    print(arr)
+    #print(arr)
     return arr
-def analysis(arr):
+
+def analysis(arr,layer,pos):
 
     # Identify both cabels
     index1 = np.where(arr == np.amin(arr))
 
     # value of the accepted distances
-    print('Dist1:', arr[index1[0]])
+    #print('Dist1:', arr[index1[0]])
 
     # Rescale the distances to the measured angles of the LiDAR
     angle = np.linspace(START_ANGLE, STOP_ANGLE, number)
-    print(angle[index1[0]])
+    #print(angle[index1[0]])
 
     # Calculate the distance of the object from the centre point of the
     # LiDAR measurement
     x = np.sin(angle)
-    pos = np.multiply(x[index1], arr[index1[0]])
-    print(pos)
-    return pos
+    y = np.multiply(x[index1[0]], arr[index1[0]])
 
+    pos[layer] = y[0]
+    return pos
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("Socket created")
@@ -68,6 +74,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     msg = b'\x02sEN LMDscandata 1\x03\0'
     s.send(msg)
+    pos = np.double([0, 0, 0, 0])
+
     while True:
 
         data = s.recv(2048)
@@ -80,19 +88,38 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = data.split(b' ')
             number = parse_number(data[25])
 
-            print('Number points:', number)
+            #print('Number points:', number)
             dist = [parse_number(x) / 1000 for x in data[26:26+number]]
-            print('Distance [m]:', dist)
+            #print('Distance [m]:', dist)
 
             # Remake the distances to an array
             arr = np.array(dist)
 
             # Layer filter
-            layercheck(data[15])
+            layer = layercheck(data[15])
 
-            # Length filter
+            # Lengthfilter
             arr = Lengthfilter(arr)
 
-            # Get position from centerpoint
-            pos = analysis(arr)
+            # If all value in the distance array arr is the same we see no cabel, so we set the pos value to 99
+            if len(set(arr)) == 1:
+                pos[layer] = 99
+            else:
+                # If we see the cabel we get position from centerpoint with function analysis
+                pos = analysis(arr, layer, pos)
+
+            # If all values in the pos array are not equal to zero we print the result.
+            if np.all((pos)):
+                # Pos is a array of distance from centerpoint with layer 4 as index 0
+
+                print(pos)
+
+                for i in pos:
+                    if i == 99:
+                        continue
+                    else:
+                        print(i)
+                        break
+                pos = np.double([0, 0, 0, 0])
+
 
