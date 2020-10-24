@@ -6,24 +6,31 @@ from packets import *
 connect()
 loadConfig()
 run()
+global pos
+pos = np.double([0, 0, 0, 0])
 while True:
     # Take input from the device
     data = receive()
 
     # Preprocess the received data
-    print(data)
     header = decodeDatagram(data)
     angle = getAngle(header)
-    print(angle)
-    print(header["Data"])
-    print(header["NumberOfData"])
-    print(header["StartingAngle"])
-    print(header["AngularStepWidth"])
-    print(header["StopAngle"])
+    #print(data)
+    #print(angle)
+    #print(header["Data"])
+    #print(header["NumberOfData"])
+    #print(header["StartingAngle"])
+    #print(header["AngularStepWidth"])
+    #print(header["StopAngle"])
     layer = layerCheck(header)
     data = lengthFilter(header)
-    pos = position(data, layer, angle)
-    print(pos)
+    if len(set(data)) == 1:
+        pos[layer] = 99
+    else:
+        pos = position(data, layer, angle, pos)
+    if np.all((pos)):
+        print('Position for all layers',pos)
+        pos = one_pos_all_layer(pos)
 
     # Filter the preprocess the data
     # filtering()

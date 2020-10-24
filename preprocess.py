@@ -17,16 +17,12 @@ def fromBinary(data):
 def layerCheck(header):
 
     if header["Layer"] == b'FE0C':
-        print("Layer: 4")
         return 0
     elif header["Layer"] == b'FF06':
-        print("Layer: 3")
         return 1
     elif header["Layer"] == b'0':
-        print("Layer: 2")
         return 2
     elif header["Layer"] == b'FA':
-        print("Layer: 1")
         return 3
 
 
