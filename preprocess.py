@@ -2,7 +2,7 @@
 # Preprocessing of the input data
 #
 
-import collections
+from collections import namedtuple as nt 
 import numpy as np
 
 
@@ -14,55 +14,51 @@ def fromBinary(data):
         return int(data, 16)
 
 # Identify the layers from each input
-def layerCheck():
-    layer = header['Layer']
-    if layer == b'FE0C':
-        print("Layer: 4")
-    elif layer == b'FF06':
-        print("Layer: 3")
-    elif layer == b'0':
-        print("Layer: 2")
-    elif layer == b'FA':
-        print("Layer: 1")
+def layerCheck(header):
+
+    if header["Layer"] == b'FE0C':
+        return 0
+    elif header["Layer"] == b'FF06':
+        return 1
+    elif header["Layer"] == b'0':
+        return 2
+    elif header["Layer"] == b'FA':
+        return 3
+
+
 
 # Split the data into datapoints
 def splitData(data): 
     return data.split(b' ')
 
 # Create angular array from measured start and stop angle
-def angle(): 
-    return np.linspace(startAngle(), stopAngle(), dataPoints())    
+def getAngle(header):
+    return np.linspace(startAngle(header), stopAngle(header), header["NumberOfData"])
     
 # Returns the starting angle of the reading
-def startAngle():
-    return header['StartingAngle']
+def startAngle(header):
+    return header["StartingAngle"]
 
 # Returns the stop angle of the reading
-def stopAngle():
-    return header['StartingAngle']+header['AngularStepWidth']*header['NumberOfData']
+def stopAngle(header):
+    return  header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
 
 # Converts the measured data from millimeters to meters
-def toMeter(milli):
-    return milli/1000
-
-# Assigns the data to an array variable
-def toArray():
-    return np.array(header['Data'])
+def toMeter(data):
+    return data/1000
 
 # Decoding of the received data stream
-def decodeDatagram():
-    pass
+def decodeDatagram(data):
+    NamedTuple = nt("MRS1000",["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"]) 
 
-# Main function of the preprocessing
-def preprocess(received):
-    print(received)
+    datapoints = splitData(data)
 
-    # Assign values to the named tuple
-    # header = decodeDatagram()
-    
-    # Create the array of angles for each data point 
-    # angleArray = angle()
+    header = {}
+    header["NumberOfData"] = fromBinary(datapoints[25])
+    header["Data"] = [toMeter(fromBinary(x)) for x in datapoints[26:26+header["NumberOfData"]]]
+    header["StartingAngle"] = 90-fromBinary(datapoints[23])/10000
+    header["AngularStepWidth"] = fromBinary(datapoints[24])/10000
+    header["StopAngle"] = header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
+    header["Layer"] = datapoints[15]
+    return header
 
-    # Create an array of the measrued data in meter
-    # dataArray = toArray()
-    
