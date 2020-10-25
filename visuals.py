@@ -21,20 +21,5 @@
 #LedRange = (NewMax - NewMin)
 #NewValue = (((OldValue - pantografMin) * LedRange) / PantografRange) + NewMin
 
-leftMin = -2000
-leftMax = 2000
-rightMin = 0
-rightMax = 10
-value =
 
-#translate(value, leftMin, leftMax, rightMin, rightMax):
-# Figure out how 'wide' each range is
-leftSpan = leftMax - leftMin
-rightSpan = rightMax - rightMin
 
-    # Convert the left range into a 0-1 range (float)
-valueScaled = float(value - leftMin) / float(leftSpan)
-
-    # Convert the 0-1 range into a value in the right range.
-led = rightMin + (valueScaled * rightSpan)
-print(led)

@@ -2,13 +2,16 @@
 
 from packets import *
 
+
 # System start, Startup.py
 connect()
 loadConfig()
 run()
 global pos
 pos = np.double([0, 0, 0, 0])
+t = time.time()
 while True:
+
     # Take input from the device
     data = receive()
 
@@ -22,15 +25,33 @@ while True:
     #print(header["StartingAngle"])
     #print(header["AngularStepWidth"])
     #print(header["StopAngle"])
+
+    # Preprocess -> layerCheck
     layer = layerCheck(header)
+    # filtering -> lengthFilter
     data = lengthFilter(header)
+
+    # If we get no hit set value to 99
     if len(set(data)) == 1:
         pos[layer] = 99
     else:
+        # analysis -> position
         pos = position(data, layer, angle, pos)
+        #print(pos)
+
+    # All values from layers are collected
     if np.all((pos)):
-        print('Position for all layers',pos)
-        pos = one_pos_all_layer(pos)
+        #print('Position for all layers',pos)
+
+        # analysis -> pos_layersafety
+        pos, i = pos_layersafety(pos)
+        print('Position after all layer are checked:', i, 'm')
+        # postprocess -> convertposition_to_led
+        led = convertposition_to_led(i)
+        print('LED:', led)
+
+        # analysis -> output_time
+        t = output_time(t)
 
     # Filter the preprocess the data
     # filtering()
