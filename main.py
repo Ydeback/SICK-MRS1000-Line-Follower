@@ -2,14 +2,14 @@
 
 from packets import *
 
+global pos = np.double([0, 0, 0, 0])
+t = time.time()
 
 # System start, Startup.py
 connect()
 loadConfig()
 run()
-global pos
-pos = np.double([0, 0, 0, 0])
-t = time.time()
+
 while True:
 
     # Take input from the device

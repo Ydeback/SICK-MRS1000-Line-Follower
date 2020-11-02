@@ -29,33 +29,3 @@ def decode_datagram(datagram):
     print(header['Data'])
     return header
 
-def dist(length):
-    if b'+' in length or b'-' in length:
-        return int(length)
-    else:
-        return int(length, 16)
-
-def from_socket(socket):
-    while True:
-        data = socket.recv(256)
-        for byte in data:
-            yield bytes([byte])
-
-def datagrams_from_socket(socket):
-    STX = b'\x02'
-    ETX = b'\x03'
-
-    data = from_socket(socket)
-
-    while True:
-        datagram = b''
-
-        for byte in data:
-            if byte == STX:
-                break
-
-        for byte in data:
-            if byte == ETX:
-                break
-            datagram += byte
-        yield datagram
