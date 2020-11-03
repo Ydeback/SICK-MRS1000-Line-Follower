@@ -2,13 +2,14 @@
 
 from packets import *
 
-global pos = np.double([0, 0, 0, 0])
-t = time.time()
-
 # System start, Startup.py
 connect()
 loadConfig()
 run()
+global pos
+pos = np.double([0, 0, 0, 0])
+t = time.time()
+
 
 while True:
 
@@ -30,7 +31,7 @@ while True:
     layer = layerCheck(header)
     # filtering -> lengthFilter
     data = lengthFilter(header)
-
+    #print(data)
     # If we get no hit set value to 99
     if len(set(data)) == 1:
         pos[layer] = 99
@@ -41,7 +42,7 @@ while True:
 
     # All values from layers are collected
     if np.all((pos)):
-        #print('Position for all layers',pos)
+        print('Position for all layers',pos)
 
         # analysis -> pos_layersafety
         pos, i = pos_layersafety(pos)
@@ -51,7 +52,10 @@ while True:
         print('LED:', led)
 
         # analysis -> output_time
-        t = output_time(t)
+        # t = output_time(t)
+        # animate(i)
+
+        Visual(led)
 
     # Filter the preprocess the data
     # filtering()

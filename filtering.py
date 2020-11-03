@@ -3,7 +3,7 @@ import numpy as np
 
 def lengthFilter(header):
     # Filter the distances to only care for the specified interval
-    high_threshold = 3
+    high_threshold = 10
     low_threshold = 0.5
     data = np.array(header["Data"])
 

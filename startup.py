@@ -1,9 +1,5 @@
 #Startup configuration of MRS1000c LiDAR
 
-#ifndef windows
-#ifndef linux
-#ifndef mac
-
 import socket
 
 # Device ip-address
@@ -15,7 +11,12 @@ PORT = 2112
 # Create Address for the device
 ADDRESS = (HOST,PORT) 
 
-# Create a socket object
+# Temporary value of start angle (horz)(rad)
+START_ANGLE = 0.08726646259 
+
+# Temporary value of stop angle (horz)(rad)
+STOP_ANGLE = -0.08726646259 
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Connect to the LiDAR
