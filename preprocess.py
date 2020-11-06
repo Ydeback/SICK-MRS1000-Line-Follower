@@ -25,8 +25,6 @@ def layerCheck(header):
     elif header["Layer"] == b'FA':
         return 3
 
-
-
 # Split the data into datapoints
 def splitData(data): 
     return data.split(b' ')

@@ -2,7 +2,7 @@
 
 from startup import s
 
-BUFFER = 2068
+BUFFER = 2064
 
 # Receive data sent from device
 def receive():

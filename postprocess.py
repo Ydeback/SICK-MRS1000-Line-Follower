@@ -1,8 +1,11 @@
 # Postprocessing of the data for preparation for LED compatible format
-def convertposition_to_led(i):
-    value = i
-    leftMin = -1.4
-    leftMax = 1.4
+import math
+
+def convertposition_to_led(pos_after_check, length, angle_cabel, header):
+    value = pos_after_check
+    #leftMin and leftMax is constant for the pantograf
+    leftMin = math.tan(math.radians(header["StartingAngle"]))*math.cos(angle_cabel)*length
+    leftMax = math.tan(math.radians(header["StopAngle"]))*math.cos(angle_cabel)*length
     rightMin = 0
     rightMax = 50
     #translate(value, leftMin, leftMax, rightMin, rightMax):
