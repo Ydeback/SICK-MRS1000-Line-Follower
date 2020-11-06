@@ -4,7 +4,8 @@ from packets import *
 
 # System start, Startup.py
 connect()
-loadConfig()
+header = loadconfig()
+FLAG = failCheck(header)
 run()
 global pos
 pos = np.double([0, 0, 0, 0])
