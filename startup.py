@@ -5,6 +5,7 @@
 # ifndef mac
 
 import socket
+import sys
 from collections import namedtuple as nt
 
 BUFFER = 2064
@@ -20,9 +21,9 @@ ADDRESS = (HOST, PORT)
 
 ### Variables for the parameter configuration of the LiDAR
 # Starting angle in degrees for the data output range
-startrange = 15
+startrange = 5
 # Stop angle in degrees for the data output range
-stoprange = 15
+stoprange = 5
 # Remission and angle (uint_8: 0 (no), 1 (RSSI), 8 (AINF), 9 (RSSI & AINF))
 remissionandangle = b'0'
 # Resolution of remission data (enum_8: 1 (8bit), 2 (16-bit))
@@ -49,65 +50,79 @@ def connect():
         print("Connection failed: ", error)
         exit()
 
-def disconnect():
-    try:
-        s.shutdown
-        print("Disconnected from:", HOST)
-    except socket.error as error:
-        print("Disconnection failed: ", error)
-        exit()
-
-# Decimal to hexadecimal conversion
-def fromDecToHex(x):
-    return bytes(hex(x).split('x')[-1].upper(), encoding='ascii')
 
 # Login as Authorized client
 def login():
     s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
+
+
+def fromDecToHex(x):
+    return bytes(hex(x).split('x')[-1].upper(), encoding='ascii')
+
 
 # Set output data range
 def setDataRange(startrange, stoprange):
     s.send(b'\x02sWN LMPoutputRange 1 9C4 ' + stop + b' ' + start + b'\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
+
 
 # Read output data range
 def readDataRange():
     s.send(b'\x02sRN LMPoutputRange\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
 
-# Load factory defaults
+
 def loadFactoryDefaults():
     # s.send(b'\x02sMN mSCloadfacdef\x03')
     # msg = s.recv(BUFFER)
+    # print(msg)
     # return msg
     pass
 
-# Set data stream contents
+
 def setDataContent():
     s.send(
         b'\x02sWN LMDscandatacfg 00 00 ' + remissionandangle + b' ' + remissionresolution + b' 0 0 0 ' + position + b' ' + devicename + b' ' + comment + b' ' + time + b' 01\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
+
+
+# Reboot the device
+def rebootDevice():
+    s.send(b'\x02sMN mSCreboot\x03')
+    msg = s.recv(BUFFER)
+    print(msg)
+    return msg
+
 
 # Read device status (Ready, logged-in, error)
 def readDeviceStatus():
     s.send(b'\x02sRN SCdevicestate\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
+
 
 # Store configuration permanently
 def storePermanently():
     s.send(b'\x02sMN mEEwriteall\x03')
     msg = s.recv(BUFFER)
+    print(msg)
     return msg
 
+
 ## Unit and encoding changes for the parameter variables
-stop = fromDecToHex((90 - startrange) * 10000)
-start = fromDecToHex((90 + stoprange) * 10000)
+stop = fromDecToHex((45 - startrange) * 10000)
+start = fromDecToHex((45 + stoprange) * 10000)
+
 
 # Loading the config of the MRS1000c LiDAR
 def loadconfig():
@@ -148,13 +163,13 @@ def failCheckfunc(header):
 
 def failCheck(header):
     if failCheckfunc(header):
-        print("Startup Configuration failed!")
+        print("Something went wrong")
     else:
-        print("All configurations was set successfully!")
+        print("All went well")
 
 
 # Send data request message
 def run():
     s.send(b'\x02sEN LMDscandata 1\x03\0')
-    print("Retreiving position data!...")
+    print("Message sent")
     trash = s.recv(BUFFER)
