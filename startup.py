@@ -38,18 +38,24 @@ comment = b'0'
 time = b'0'
 
 # Create a socket object
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+def createSocket():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    except socket.error as err:
+        print("Socket could no be created: ",err)
+    return s
 
 # Connect to the LiDAR
 def connect():
-    try:
-        s.connect(ADDRESS)
-        print("Connected to:", HOST)
-    except socket.error as error:
-        print("Connection failed: ", error)
-        exit()
-
+    if s.getpeername() == None:
+        try:
+            s.connect(ADDRESS)
+            print("Connected to:", HOST)
+        except socket.error as error:
+            print("Connection failed: ", error)
+            exit()
+    else:
+        return
 
 # Login as Authorized client
 def login():
