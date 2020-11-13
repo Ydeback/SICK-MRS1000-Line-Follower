@@ -5,8 +5,10 @@
 # ifndef mac
 
 import socket
-import sys
+import time
 from collections import namedtuple as nt
+
+rebootFLAG = [False, False]
 
 BUFFER = 2064
 
@@ -35,14 +37,15 @@ devicename = b'0'
 # Comment (bool: 0 (no), 1 (yes))
 comment = b'0'
 # time (bool: 0 (no), 1 (yes))
-time = b'0'
+timeactive = b'0'
 
-# Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+def createSocket():
+    return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Connect to the LiDAR
-def connect():
+def connect(s):
     try:
         s.connect(ADDRESS)
         print("Connected to:", HOST)
@@ -89,7 +92,7 @@ def loadFactoryDefaults():
 
 def setDataContent():
     s.send(
-        b'\x02sWN LMDscandatacfg 00 00 ' + remissionandangle + b' ' + remissionresolution + b' 0 0 0 ' + position + b' ' + devicename + b' ' + comment + b' ' + time + b' 01\x03')
+        b'\x02sWN LMDscandatacfg 00 00 ' + remissionandangle + b' ' + remissionresolution + b' 0 0 0 ' + position + b' ' + devicename + b' ' + comment + b' ' + timeactive + b' 01\x03')
     msg = s.recv(BUFFER)
     print(msg)
     return msg
@@ -169,7 +172,23 @@ def failCheck(header):
 
 
 # Send data request message
-def run():
+def run(s):
     s.send(b'\x02sEN LMDscandata 1\x03\0')
     print("Message sent")
     trash = s.recv(BUFFER)
+
+def reboot(s):
+    try:
+        s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
+        print("Login done!")
+        time.sleep(1)
+        s.send(b'\x02sEN LMDscandata 0\x03')
+        print("stop sending data")
+        time.sleep(1)
+    except socket.error as err:
+        print("Login not possible: ", err)
+        exit()
+    print("Rebooting!...")
+    s.send(b'\x02sMN mSCreboot\x03')
+    time.sleep(1)
+    rebootFLAG[1] = True

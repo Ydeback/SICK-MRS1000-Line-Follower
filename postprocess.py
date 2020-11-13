@@ -3,9 +3,12 @@ import math
 
 def convertposition_to_led(pos_after_check, length, angle_cabel, header):
     value = pos_after_check
-    #leftMin and leftMax is constant for the pantograf
+    # Scaling based on the reading angle.
     leftMin = math.tan(math.radians(header["StartingAngle"]))*math.cos(angle_cabel)*length
     leftMax = math.tan(math.radians(header["StopAngle"]))*math.cos(angle_cabel)*length
+    # leftMin and leftMax is constant for the pantograf total length of pantograf is 2.366 m
+    #leftMin = 0.1 #0.875
+    #leftMax = 0.8 #3.241
     rightMin = 0
     rightMax = 50
     #translate(value, leftMin, leftMax, rightMin, rightMax):
