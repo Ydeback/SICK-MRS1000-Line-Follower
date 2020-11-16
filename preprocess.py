@@ -1,10 +1,6 @@
-#
-# Preprocessing of the input data
-#
+# Method set for the preprocessing features of the program
 
-from collections import namedtuple as nt 
-import numpy as np
-
+from __PREPROCESS__ import *
 
 # Convert measured data from binary
 def fromBinary(data): 
@@ -14,15 +10,14 @@ def fromBinary(data):
         return int(data, 16)
 
 # Identify the layers from each input
-def layerCheck(header):
-
-    if header["Layer"] == b'FE0C':
+def layerCheck(layer):
+    if layer == b'FE0C':
         return 0
-    elif header["Layer"] == b'FF06':
+    elif layer == b'FF06':
         return 1
-    elif header["Layer"] == b'0':
+    elif layer == b'0':
         return 2
-    elif header["Layer"] == b'FA':
+    elif layer == b'FA':
         return 3
 
 # Split the data into datapoints
@@ -31,19 +26,15 @@ def splitData(data):
 
 # Create angular array from measured start and stop angle
 def getAngle(header):
-    return np.linspace(startAngle(header), stopAngle(header), header["NumberOfData"])
+    return np.linspace(header["StartingAngle"], stopAngle(header), header["NumberOfData"])
     
-# Returns the starting angle of the reading
-def startAngle(header):
-    return header["StartingAngle"]
-
 # Returns the stop angle of the reading
 def stopAngle(header):
     return  header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
 
 # Converts the measured data from millimeters to meters
-def toMeter(data):
-    return data/1000
+def toMeter(x):
+    return x/1000
 
 # Decoding of the received data stream
 def decodeDatagram(data):

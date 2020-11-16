@@ -1,48 +1,43 @@
 # Analysis of the preprocessed data for calculations of position
-import numpy as np
-import time
+
+from __ANALYSIS__ import *
 
 # Calculate the position and place it in an array.
-def position(data, layer, angle, pos, cabel_angle):
-
-    # Identify one cabel
-    index1 = np.where(data == np.amin(data))
-
-    # value of the accepted distances
-    #print('Dist1:', arr[index1[0]])
-
-    # LiDAR measurement
+def position(filtered, layer, angle, pos, cableangle):
+    index = np.where(filtered == np.amin(filtered))
     rad = angle*np.pi/180
     x = np.sin(rad)
-    y = np.multiply(x[index1[0]], data[index1[0]])
-    z = rad[index1[0]]
-    cabel_angle[layer] = z[0]
+    y = np.multiply(x[index[0]], filtered[index[0]])
+    z = rad[index[0]]
+    cableangle[layer] = z[0]
     pos[layer] = y[0]
-    return pos, index1, cabel_angle
+    return pos, index, cableangle
 
-def lengtharray(data, layer, index1, length):
-    z = data[index1[0]]
+def lengthArray(filtered, layer, index, length):
+    z = filtered[index[0]]
     length[layer] = z[0]
     return length
 
-
-# Print the best position
+# Store the best position hit of the hit cable
 def pos_layersafety(pos):
-    i = 0
+    hitlayer = 0
     for pos_after_check in pos:
         if pos_after_check == 99:
-            i = i + 1
-            continue
+            hitlayer = hitlayer + 1
         else:
             break
-    if pos_after_check == 99:
-        print('Error: No hit!')
-    pos = np.double([0, 0, 0, 0])
-    return pos, pos_after_check, i
+    
+    if hitlayer > 3:
+        hitlayer = 3
 
-def output_time(t):
-    # Time for output
-    elapsed = time.time() - t
-    print('DeltaT:',elapsed, 's')
-    t = time.time()
-    return t
+    # If no hit was made a flag for 
+    global missflag
+    if pos_after_check == 99:
+        missflag += 1
+    else:
+        missflag = 0
+    
+    # Reset the pos array for the next while iteration
+    pos = np.double([0, 0, 0, 0])
+    return pos, pos_after_check, hitlayer
+

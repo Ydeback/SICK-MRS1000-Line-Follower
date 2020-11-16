@@ -1,64 +1,26 @@
 # Startup configuration of MRS1000c LiDAR
 
-# ifndef windows
-# ifndef linux
-# ifndef mac
+from __STARTUP__ import *
+from __INIT__ import BUFFER
 
-import socket
-import time
-from collections import namedtuple as nt
-
-rebootFLAG = [False, False]
-
-BUFFER = 2064
-
-# Device ip-address
-HOST = "169.254.93.123"
-
-# Commication port
-PORT = 2112
-
-# Create Address for the device
-ADDRESS = (HOST, PORT)
-
-### Variables for the parameter configuration of the LiDAR
-# Starting angle in degrees for the data output range
-startrange = 5
-# Stop angle in degrees for the data output range
-stoprange = 5
-# Remission and angle (uint_8: 0 (no), 1 (RSSI), 8 (AINF), 9 (RSSI & AINF))
-remissionandangle = b'0'
-# Resolution of remission data (enum_8: 1 (8bit), 2 (16-bit))
-remissionresolution = b'0'
-# Position (bool: 0 (no), 1 (yes)))
-position = b'0'
-# Device name  (bool: 0 (no), 1 (yes)))
-devicename = b'0'
-# Comment (bool: 0 (no), 1 (yes))
-comment = b'0'
-# time (bool: 0 (no), 1 (yes))
-timeactive = b'0'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+# Construction of a socket object (TCP)
 def createSocket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Connect to the LiDAR
+# Connect to the server side (LiDAR)
 def connect(s):
     try:
         s.connect(ADDRESS)
-        print("Connected to:", HOST)
-    except socket.error as error:
-        print("Connection failed: ", error)
-        exit()
-
+    except:
+        connectflag = True
 
 # Login as Authorized client
-def login():
-    s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
+def login(s):
+    try:
+        s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
+    except socket.error as err:
+        print("Error: ", err)
     msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
 
@@ -67,84 +29,60 @@ def fromDecToHex(x):
 
 
 # Set output data range
-def setDataRange(startrange, stoprange):
+def setDataRange(s, startrange, stoprange):
     s.send(b'\x02sWN LMPoutputRange 1 9C4 ' + stop + b' ' + start + b'\x03')
     msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
 
 # Read output data range
-def readDataRange():
+def readDataRange(s):
     s.send(b'\x02sRN LMPoutputRange\x03')
     msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
-
-def loadFactoryDefaults():
-    # s.send(b'\x02sMN mSCloadfacdef\x03')
-    # msg = s.recv(BUFFER)
-    # print(msg)
-    # return msg
-    pass
-
-
-def setDataContent():
+# Configure the data output content
+def setDataContent(s):
     s.send(
-        b'\x02sWN LMDscandatacfg 00 00 ' + remissionandangle + b' ' + remissionresolution + b' 0 0 0 ' + position + b' ' + devicename + b' ' + comment + b' ' + timeactive + b' 01\x03')
+        b'\x02sWN LMDscandatacfg 00 00 ' + remang  + b' ' + remres + b' 0 0 0 '
+        + position + b' ' + devicename + b' ' + comment + b' ' + timeinfo + b' 01\x03')
     msg = s.recv(BUFFER)
-    print(msg)
-    return msg
-
-
-# Reboot the device
-def rebootDevice():
-    s.send(b'\x02sMN mSCreboot\x03')
-    msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
 
 # Read device status (Ready, logged-in, error)
-def readDeviceStatus():
+def readDeviceStatus(s):
     s.send(b'\x02sRN SCdevicestate\x03')
     msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
 
 # Store configuration permanently
-def storePermanently():
+def storePermanently(s):
     s.send(b'\x02sMN mEEwriteall\x03')
     msg = s.recv(BUFFER)
-    print(msg)
     return msg
 
 
 ## Unit and encoding changes for the parameter variables
-stop = fromDecToHex((45 - startrange) * 10000)
-start = fromDecToHex((45 + stoprange) * 10000)
-
+stop = fromDecToHex((90 - startrange) * 10000)
+start = fromDecToHex((90 + stoprange) * 10000)
 
 # Loading the config of the MRS1000c LiDAR
-def loadconfig():
+def loadconfig(s):
     NamedTuple = nt("Answers",
                     ["Login", "SetDataRange", "ReadDataRange", "ReadAngleAndFrequency", "LoadFactoryDefaults",
                      "SetDataContent", "SetToStandby", "RebootDevice", "ReadDeviceStatus", "StorePermanently",
                      "StartMeas", "StopMeas"])
 
     header = {}
-    header["Login"] = login()
-    header["ReadDataRange"] = readDataRange()
+    header["Login"] = login(s)
+    header["ReadDataRange"] = readDataRange(s)
     if header["ReadDataRange"] != b'\x02sWA LMPoutputRange\x03':
-        header["SetDataRange"] = setDataRange(startrange, stoprange)
-    header["SetDataContent"] = setDataContent()
-    # header["RebootDevice"] = rebootDevice()
-    header["StorePermanently"] = storePermanently()
-    header["ReadDeviceStatus"] = readDeviceStatus()
-    # header["LoadFactoryDefaults"] = loadFactoryDefaults()
-
+        header["SetDataRange"] = setDataRange(s,startrange, stoprange)
+    header["SetDataContent"] = setDataContent(s)
+    header["StorePermanently"] = storePermanently(s)
+    header["ReadDeviceStatus"] = readDeviceStatus(s)
     return header
 
 
@@ -166,29 +104,23 @@ def failCheckfunc(header):
 
 def failCheck(header):
     if failCheckfunc(header):
-        print("Something went wrong")
-    else:
-        print("All went well")
+        configflag = True
 
 
 # Send data request message
 def run(s):
     s.send(b'\x02sEN LMDscandata 1\x03\0')
-    print("Message sent")
     trash = s.recv(BUFFER)
 
+
 def reboot(s):
-    try:
-        s.send(b'\x02sMN SetAccessMode 03 F4724744\x03')
-        print("Login done!")
-        time.sleep(1)
-        s.send(b'\x02sEN LMDscandata 0\x03')
-        print("stop sending data")
-        time.sleep(1)
-    except socket.error as err:
-        print("Login not possible: ", err)
-        exit()
-    print("Rebooting!...")
     s.send(b'\x02sMN mSCreboot\x03')
-    time.sleep(1)
-    rebootFLAG[1] = True
+
+
+def startup():
+    s = createSocket()
+    connect(s)
+    header = loadconfig(s)
+    failCheck(header)
+    run(s)
+    return s

@@ -1,90 +1,53 @@
 # Main file of Communication for data receival from MRS1000c
-import time
 from packets import *
+from __MAIN__ import *
 
-time.sleep(5)
-# System start, Startup.py
-
-connect(s)
-header = loadconfig()
-FLAG = failCheck(header)
-run(s)
-global pos
-pos = np.double([0, 0, 0, 0])
-length = np.double([0, 0, 0, 0])
-cabel_angle = np.double([0, 0, 0, 0])
-t = time.time()
-
-
-# Device ip-address
-HOST = "169.254.93.123"
-
-# Commication port
-PORT = 2112
-
-# Create Address for the device
-ADDRESS = (HOST, PORT)
-
+s = startup()
 
 while True:
-    if rebootFLAG[0]:
-        rebootFLAG[0] = False
+    # If the reboot button has been pushed, reboot the LiDAR.
+    if rebootflag:
+        # Run reboot procedure of the LiDAR,
+        # also connected to Reboot.py, also rebooting Raspberry Pi.
         reboot(s)
-    elif rebootFLAG[1]:
-        try:
-            s.send(b'\x02sRN SCdevicestate\x03')
-        except socket.error as err:
-            s.close()
-            s = createSocket()
-            connect(s)
-            run(s)
-            rebootFLAG[1] = False
     else:
+        # Receive data from the LiDAR, @return binary data stream
         data = receive(s)
-
-        # Preprocess the received data
+        # Preprocess the received data, @return data split into named
+        # sections
         header = decodeDatagram(data)
+        # @return array of individual laser angles corresponding
+        # to the received data points
         angle = getAngle(header)
-        #print(data)
-        #print(angle)
-        #print(header["Data"])
-        #print(header["NumberOfData"])
-        #print(header["StartingAngle"])
-        #print(header["AngularStepWidth"])
-        #print(header["StopAngle"])
 
-        # Preprocess -> layerCheck
-        layer = layerCheck(header)
-        # filtering -> lengthFilter
-        data = lengthFilter(header)
-        #print(data)
+        # @return which scan layer the sent data belongs to
+        layer = layerCheck(header["Layer"])
+        # @return the data stream filtered to prescribed interval
+        filtered = lengthFilter(header["Data"])
         # If we get no hit set value to 99
-        if len(set(data)) == 1:
+        if len(set(filtered)) == 1:
             pos[layer] = 99
         else:
-            # analysis -> position
-            pos, index1, cabel_angle = position(data, layer, angle, pos, cabel_angle)
-            length = lengtharray(data, layer, index1, length)
-
-        # All values from layers are collected
+            # @return pos: position?
+            # @return index: the index of the?
+            # @return cableangle: ?
+            pos, index, cableangle = position(filtered, layer, angle, pos, cableangle)
+            # @return ?
+            length = lengthArray(filtered, layer, index, length)
+        # If all values from the four scan layers are collected
         if np.all((pos)):
-            #print('Position for all layers', pos)
-            #print('Length for all layers', length)
-            #print('Angle for all layers', cabel_angle)
-
-            sensor = light_sensor()
-            autoLight()
-
-
-
-            pos, pos_after_check, i = pos_layersafety(pos)
-
-            #print('Position after all layer are checked:', pos_after_check, 'm')
-            #print('Length after all layer are checked:', length[i], 'm')
-            #print('Angle after all layer are checked:', cabel_angle[i], 'rad')
-
-            led = convertposition_to_led(pos_after_check, length[i], cabel_angle[i], header)
-            #print('LED:', led)
-
+            # @return pos: ?
+            # @return posaftercheck: ?
+            # @return i: ?
+            pos, posaftercheck, hitlayer = pos_layersafety(pos)
+            
+            # @return Which led in the led strip the position is
+            # represented by
+            led = convertPositionToLed(posaftercheck, length[hitlayer], cableangle[hitlayer], header)
+            # Update the led strip with the correct position
+            # representation
             visual(led)
+            # If the auto button has been pushed, run the method to automatically adjust the brightness of the leds
+            if Col["AUTO"]:
+                autolight()
 
