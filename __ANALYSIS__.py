@@ -1,6 +1,6 @@
 # Initialization of variables used in the analysis method set
 
 import numpy as np
-
+from __INIT__ import *
 # Miss counter if the cable is totally missed
-missflag = 0
+flags["MISS"] = 0

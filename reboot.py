@@ -8,8 +8,8 @@ def reboot(channel):
 
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(18, GPIO.RISING, callback=reboot, bouncetime=300)
+GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(8, GPIO.RISING, callback=reboot, bouncetime=300)
 
 while True:
     pass

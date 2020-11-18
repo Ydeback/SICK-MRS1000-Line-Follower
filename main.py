@@ -3,16 +3,17 @@ from packets import *
 from __MAIN__ import *
 
 s = startup()
-
+strip.clear_strip()
 while True:
     # If the reboot button has been pushed, reboot the LiDAR.
-    if rebootflag:
+    if flags["REBOOT"]:
         # Run reboot procedure of the LiDAR,
         # also connected to Reboot.py, also rebooting Raspberry Pi.
         reboot(s)
     else:
         # Receive data from the LiDAR, @return binary data stream
         data = receive(s)
+        #if(len(data) > 30):
         # Preprocess the received data, @return data split into named
         # sections
         header = decodeDatagram(data)
@@ -40,14 +41,12 @@ while True:
             # @return posaftercheck: ?
             # @return i: ?
             pos, posaftercheck, hitlayer = pos_layersafety(pos)
-            
+
             # @return Which led in the led strip the position is
             # represented by
             led = convertPositionToLed(posaftercheck, length[hitlayer], cableangle[hitlayer], header)
             # Update the led strip with the correct position
             # representation
             visual(led)
-            # If the auto button has been pushed, run the method to automatically adjust the brightness of the leds
-            if Col["AUTO"]:
-                autolight()
+
 

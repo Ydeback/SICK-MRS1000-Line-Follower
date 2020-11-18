@@ -1,7 +1,7 @@
-# File for initialization of variables for the startup class 
+# File for initialization of variables for the client methodset 
 
 import socket
-from collections import namedtuple as nt
+from __INIT__ import *
 
 ## Configuration parameters for the LiDAR
 # Angles in degrees for the data output range
@@ -19,24 +19,19 @@ devicename = b'0'
 comment = b'0'
 # Time (bool: 0 (no), 1 (yes))
 timeinfo = b'0'
+# Echo filter (Enum_8: 0 (First echo), 1 (All echos), 2 (Last echo))
+echo = b'2'
 
 ##### FIXED #####
 # Fail check flag if the configuration failed in some way --> visuals
-configflag = False
+flags["CONFIG"] = False
 # Connection flag if the connection to the server side (LiDAR) failed
-connectflag = False
-
-# def getIP():
-    # import subprocess
-    # process = subprocess.Popen('sudo arp -D -n -i eth0', shell=True,
-            # stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    # stdout, stderr = process.communicate()
-    # ans = stdout.split()
-    # return ans[6]
-
+flags["CONNECT"] = False
+# Login flag if the message to login to the LiDAR was failed to send
+flags["LOGIN"] = False
 
 # IP-address of the server side (LiDAR)
-HOST = "169.254.247.100"
+HOST = "192.168.0.1"
 # PORT number for the communication with the server side (LiDAR)
 PORT = 2112
 # Construct the socket address for the server side (LiDAR)

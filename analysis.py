@@ -31,11 +31,10 @@ def pos_layersafety(pos):
         hitlayer = 3
 
     # If no hit was made a flag for 
-    global missflag
     if pos_after_check == 99:
-        missflag += 1
+        flags["MISS"] += 1
     else:
-        missflag = 0
+        flags["MISS"] = 0
     
     # Reset the pos array for the next while iteration
     pos = np.double([0, 0, 0, 0])
