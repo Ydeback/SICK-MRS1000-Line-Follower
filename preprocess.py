@@ -3,6 +3,7 @@
 from __PREPROCESS__ import *
 
 # Convert measured data from binary
+# @return the encoded data
 def fromBinary(data): 
     if b'+' in data or b'-' in data:
         return int(data)
@@ -10,6 +11,7 @@ def fromBinary(data):
         return int(data, 16)
 
 # Identify the layers from each input
+# @return the layer of the scanned data
 def layerCheck(layer):
     if layer == b'FE0C':
         return 0

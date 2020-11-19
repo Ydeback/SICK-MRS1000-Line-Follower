@@ -19,14 +19,15 @@ def lengthArray(filtered, layer, index, length):
     return length
 
 # Store the best position hit of the hit cable
-def pos_layersafety(pos):
+def posLayerSafety(pos):
     hitlayer = 0
     for pos_after_check in pos:
         if pos_after_check == 99:
             hitlayer = hitlayer + 1
         else:
             break
-    
+   
+   # Limit the number of hit layers for safety
     if hitlayer > 3:
         hitlayer = 3
 

@@ -2,5 +2,6 @@
 
 import numpy as np
 from __INIT__ import *
-# Miss counter if the cable is totally missed
+
+# Attribute to hold the miss counter if the cable is totally missed
 flags["MISS"] = 0

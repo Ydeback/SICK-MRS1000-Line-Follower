@@ -3,13 +3,13 @@
 #Import module for math functionality
 import math
 
-#Attribute to represent the range of the led strip
+#Attributes to represent the range of the led strip
 ledstart = 0
 ledstop = 90
 ledrange = ledstop - ledstart
 
-# the lidar position
-lidarmin = -0.7
-lidarmax = 0.7
+# Attributes to represent the offset range of the LiDAR hits
+lidarmin = -0.25
+lidarmax = 0.25
 lidarspan = lidarmax - lidarmin
 
