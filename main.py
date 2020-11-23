@@ -32,19 +32,20 @@ while True:
         if len(set(filtered)) == 1:
             pos[layer] = 99
         else:
-            # @return pos: position?
-            # @return index: the index of the?
-            # @return cableangle: ?
+            # @return pos: Offset distance from the centre of the LiDAR
+            # @return index: The scan point index of the layer
+            # @return cableangle: the angle of the same scan index
             pos, index, cableangle = position(filtered, layer, angle, pos, cableangle)
             
-            # @return ?
+            # @return Array of the length of the hits from each layer
             length = lengthArray(filtered, layer, index, length)
        
        # If all values from the four scan layers are collected
         if np.all((pos)):
-            # @return pos: ?
-            # @return posaftercheck: ?
-            # @return i: ?
+            # @return pos: The reset offset distance array for next run
+            # @return posaftercheck: The offset distance from all the
+            # chosen layer to represent the hit
+            # @return hitlayer: The hit layer that the position is taken from
             pos, posaftercheck, hitlayer = posLayerSafety(pos)
 
             # @return Which led in the led strip the position is
