@@ -4,6 +4,7 @@ from __POSTPROCESS__ import *
 
 # Method to convert the position of the target to a corresponding led in the
 # led strip
+# @return the positional led number to be lit
 def convertPositionToLed(posaftercheck, length, cableangle, header):
     value = posaftercheck
     

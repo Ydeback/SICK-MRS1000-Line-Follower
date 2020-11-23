@@ -9,7 +9,7 @@ ledstop = 90
 ledrange = ledstop - ledstart
 
 # Attributes to represent the offset range of the LiDAR hits
-lidarmin = -0.25
-lidarmax = 0.25
+lidarmin = -0.7
+lidarmax = 0.7
 lidarspan = lidarmax - lidarmin
 

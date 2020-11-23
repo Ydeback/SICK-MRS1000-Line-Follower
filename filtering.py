@@ -3,6 +3,7 @@
 from __FILTERING__ import *
 
 # Filter the distances to only care for the specified interval
+# @return the data filtered for the distance threshold
 def lengthFilter(data):
     data = np.array(data)
     data[data > upper] = 99

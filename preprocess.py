@@ -10,6 +10,7 @@ def fromBinary(data):
     else:
         return int(data, 16)
 
+
 # Identify the layers from each input
 # @return the layer of the scanned data
 def layerCheck(layer):
@@ -22,33 +23,40 @@ def layerCheck(layer):
     elif layer == b'FA':
         return 3
 
-# Split the data into datapoints
+
+# @return the split data
 def splitData(data): 
     return data.split(b' ')
 
-# Create angular array from measured start and stop angle
+
+# @return an  angular array from measured start and stop angle
 def getAngle(header):
     return np.linspace(header["StartingAngle"], stopAngle(header), header["NumberOfData"])
-    
-# Returns the stop angle of the reading
+
+
+# @return the stop angle of the reading
 def stopAngle(header):
     return  header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
 
-# Converts the measured data from millimeters to meters
+
+# @return the measured data from millimeters to meters
 def toMeter(x):
     return x/1000
 
+
 # Decoding of the received data stream
 def decodeDatagram(data):
-    NamedTuple = nt("MRS1000",["TypeOfCommand", "Command", "VersionNumber", "DeviceNumber", "SerialNumber", "DeviceSatus1", "DeviceSatus2", "TelegramCounter", "ScanCounter", "TimeSinceStartup", "TimeOfTransmission", "InputStatus1", "InputStatus2", "OutputStatus1", "OutputStatus2", "ScanningFrequency", "MeasurementFrequency", "NumberOfEncoders", "NumberOf16bitChannels", "MeasuredDataContents", "ScalingFactor", "ScalingOffset", "StartingAngle", "AngularStepWidth", "NumberOfData", "Data"])
+    # Split the incoming data string
     datapoints = splitData(data)
 
-    header = {}
     header["NumberOfData"] = fromBinary(datapoints[25])
     header["Data"] = [toMeter(fromBinary(x)) for x in datapoints[26:26+header["NumberOfData"]]]
     header["StartingAngle"] = 90-fromBinary(datapoints[23])/10000
     header["AngularStepWidth"] = fromBinary(datapoints[24])/10000
     header["StopAngle"] = header["StartingAngle"]-header["AngularStepWidth"]*(header["NumberOfData"]-1)
     header["Layer"] = datapoints[15]
+    if remang == b'1':
+        header["RSSI"] = [fromBinary(x) for x in datapoints[26+header["NumberOfData"]+6:26+header["NumberOfData"]*2+6]]
+    # header["AINF"] = datapoints[]
     return header
 

@@ -1,5 +1,10 @@
 # Main file of Communication for data receival from MRS1000c
-from packets import *
+from client import *
+from preprocess import *
+from filtering import *
+from analysis import *
+from postprocess import *
+from visuals import *
 from __MAIN__ import *
 
 # Run the system startup procedure
@@ -14,10 +19,11 @@ while True:
     else:
         # Receive data from the LiDAR, @return binary data stream
         data = receive(s)
+        print(data)
         # Preprocess the received data, @return data split into named
         # sections
         header = decodeDatagram(data)
-        
+        print(header["RSSI"])        
         # @return array of individual laser angles corresponding
         # to the received data points
         angle = getAngle(header)
@@ -40,7 +46,7 @@ while True:
             # @return ?
             length = lengthArray(filtered, layer, index, length)
        
-       # If all values from the four scan layers are collected
+        # If all values from the four scan layers are collected
         if np.all((pos)):
             # @return pos: ?
             # @return posaftercheck: ?

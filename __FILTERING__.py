@@ -3,7 +3,7 @@
 import numpy as np
 
 # Upper bound for the distance interval
-upper = 7
+upper = 70
 
 # Lower bound for the distance interval
 lower = 0.1

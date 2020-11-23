@@ -3,6 +3,7 @@
 from __ANALYSIS__ import *
 
 # Calculate the position and place it in an array.
+# @return the ?, ? and ? ## ERIC FYLL I
 def position(filtered, layer, angle, pos, cableangle):
     index = np.where(filtered == np.amin(filtered))
     rad = angle*np.pi/180
@@ -13,12 +14,17 @@ def position(filtered, layer, angle, pos, cableangle):
     pos[layer] = y[0]
     return pos, index, cableangle
 
+
+# @return an array holding the length of the closest scan point
 def lengthArray(filtered, layer, index, length):
     z = filtered[index[0]]
     length[layer] = z[0]
     return length
 
+
 # Store the best position hit of the hit cable
+# @return the reset pos array, the chosen position for the scan and the layer
+# it corresponds to
 def posLayerSafety(pos):
     hitlayer = 0
     for pos_after_check in pos:

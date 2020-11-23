@@ -2,8 +2,8 @@
 
 from __CLIENT__ import *
 from __INIT__ import *
-from visuals import *
 from __VISUALS__ import strip
+from visuals import *
 
 # Construction of a socket object (TCP)
 # @return the socket object
@@ -23,6 +23,7 @@ def connect(s):
         return True
     return False
 
+
 # Login as Authorized client
 # @return the answer received from the LiDAR
 def login(s):
@@ -39,6 +40,7 @@ def fromDecToHex(x):
 
 
 # Set output data range
+# @return the answer from the LiDAR
 def setDataRange(s, startrange, stoprange):
     s.send(b'\x02sWN LMPoutputRange 1 9C4 ' + stop + b' ' + start + b'\x03')
     return s.recv(BUFFER)
@@ -100,24 +102,18 @@ start = fromDecToHex((90 + stoprange) * 10000)
 # Loading the config of the MRS1000c LiDAR
 # @return the tuple containing the answers from the LiDAR
 def loadconfig(s):
-    NamedTuple = nt("Answers",
-                    ["Login", "SetDataRange", "ReadDataRange", "ReadAngleAndFrequency", "LoadFactoryDefaults", "SetDataContent", "SetToStandby", "RebootDevice", "ReadDeviceStatus", "StorePermanently", "StartMeas", "StopMeas"])
-
-    # Create a tuple
-    header = {}
-
     # Fill the tuple with the answers from the LiDAR
-    header["Login"] = login(s)
-    header["SetDataRange"] = setDataRange(s, startrange, stoprange)
-    header["SetDataContent"] = setDataContent(s)
-    header["SetEchoFilter"] = setEchoFilter(s)
-    header["SetParticleFilter"] = setParticleFilter(s)
-    header["SetMeanFilter"] = setMeanFilter(s)
-    header["SetMedianFilter"] = setMedianFilter(s)
-    header["StorePermanently"] = storePermanently(s)
-    header["ReadDeviceStatus"] = readDeviceStatus(s)
+    config["Login"] = login(s)
+    config["SetDataRange"] = setDataRange(s, startrange, stoprange)
+    config["SetDataContent"] = setDataContent(s)
+    config["SetEchoFilter"] = setEchoFilter(s)
+    config["SetParticleFilter"] = setParticleFilter(s)
+    config["SetMeanFilter"] = setMeanFilter(s)
+    config["SetMedianFilter"] = setMedianFilter(s)
+    config["StorePermanently"] = storePermanently(s)
+    config["ReadDeviceStatus"] = readDeviceStatus(s)
     
-    return header
+    return config
 
 
 # Check if all the config settings has been set successfully
@@ -181,6 +177,7 @@ def reboot(s):
 # @return the data received from the LiDAR
 def receive(s):
     return s.recv(BUFFER)
+
 
 # Method for the startup procedure of the LiDAR
 # @return the socket object

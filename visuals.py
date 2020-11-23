@@ -15,7 +15,6 @@ def colorSwitcher(i, dim):
     return int(switcher.get(i), 16)
 
 
-
 # Method for the color switch for the fixed marker leds
 # @return the preset color with the given brightness value
 def colorSwitcherSides(i, dim):
@@ -27,28 +26,20 @@ def colorSwitcherSides(i, dim):
     return int(switcher.get(i), 16)
 
 
-
 # Method for the visualisation of the led strip
 def visual(x):
-    # Clear the strip
     strip.clear_strip()
     if Col["START"]:
         autoLight()
-        # @return the color with the current dim strength of the positional led
         color = colorSwitcher(Col["RGB"], Col["DIM"])
-        
-        # @return the color with the current dim strength of the fixed marker
-        # leds
         colorSides = colorSwitcherSides(Col["RGB"], Col["DIM"])
-        # Setting the specification for the specified leds
         strip.set_pixel_rgb(44, colorSides)
         strip.set_pixel_rgb(48, colorSides)
         strip.set_pixel_rgb(92, colorSides)
         strip.set_pixel_rgb(0, colorSides)
         strip.set_pixel_rgb(x, color)
-
-        # Display the led with current settings
         strip.show()
+
 
 # visualisation for when the configuration of the LiDAR has failed
 def configFailVisual():
@@ -83,11 +74,12 @@ def missVisual():
 # Visualisation for when the system is set to reboot mode
 def rebootVisual():
     strip.clear_strip()
-    for x in range(nleds):
-        strip.set_pixel_rgb(nleds + 1 - x, colorSwitcher(1, Col["DIM"]))
-        strip.show()
-        time.sleep(0.01)
-
+    for x in range(2):
+        for x in range(nleds):
+            strip.set_pixel_rgb(nleds + 1 - x, colorSwitcher(1, Col["DIM"]))
+            strip.show()
+            time.sleep(0.01)
+    strip.clear_strip()
 
 # Method for the intervals of the auto dimming
 # @return the brightness of the leds
@@ -106,20 +98,13 @@ def interval(x):
 def autoLight():
     if Col["AUTO"]:
 
-        # @return sensoroutput
         sensorvalue = lightSensor()
         
-        # If the sensorvalue exceeds the set max sensor value, limit the value
         if sensorvalue > sensormax - 3:
             sensorvalue = sensormax - 3
 
-        # Convert the sensorspan into a 0-1 range (float)
         sensorvaluescaled = (sensorvalue - sensormax) / sensorspan
-
-        # Convert the 0-1 range into a value in the ledspan.
         light = interval(round(ledmin + (sensorvaluescaled * ledspan)))
-        
-        # Set the dim value
         Col["DIM"] = light
         if Col["DIM"] > 255:
             Col["DIM"] = 255
@@ -152,12 +137,3 @@ def loadingbar(commandsdone):
             strip.set_pixel_rgb(leds, colorSwitcher(2, Col["DIM"]))
             strip.show()
             time.sleep(0.005)
-    # else:
-        # time.sleep(0.5)
-        # strip.clear_strip()
-        # time.sleep(0.5)
-        # for leds in range(93):
-            # strip.set_pixel_rgb(leds, colorSwitcher(2, Col["DIM"]))
-            # strip.show()
-            # time.sleep(0.01)
-        # time.sleep(1)
