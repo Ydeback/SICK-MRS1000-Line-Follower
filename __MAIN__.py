@@ -1,6 +1,7 @@
 # File for initialization of variables for the main class
 
 import numpy as np
+from testmode import testOutput
 
 
 # Tuple to store the values of the different flags
