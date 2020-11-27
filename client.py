@@ -63,7 +63,7 @@ def setEchoFilter(s):
 #Set the partticle filter
 # @return the answer received from the LiDAR
 def setParticleFilter(s):
-    s.send(b'\x02sWN LFPparticle ' + particle + b' ' + fromDecToHex(particlesize * 1000) + b'\x03')
+    s.send(b'\x02sWN LFPparticle ' + particle + b' ' + fromDecToHex(500) + b'\x03')
     return s.recv(BUFFER)
 
 
@@ -169,8 +169,8 @@ def reboot(s):
         s.send(b'\x02sMN mSCreboot\x03')
     except socket.error:
         pass
-   ### To be activated in final version ###
-   # os.system("sudo shutdown -r now")
+    ### To be activated in final version ###
+    # os.system("sudo shutdown -r now")
 
 
 # Method for receiving data from the LiDAR

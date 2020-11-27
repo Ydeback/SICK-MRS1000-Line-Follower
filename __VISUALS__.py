@@ -18,15 +18,13 @@ startcolor = 2
 startdim = 40 
 # Attributes to set the autodimming mode at startup (bool: True (on),False (off)
 startauto = False
-startLED = False
+startLED = True
 # Attribute to set the amount of dim increase of the dim button
-diminc = 40
+diminc = 20
 # Attributes to adjust the external light sensor range
 sensormax = 180
 sensormin = 0
 sensorspan = sensormin - sensormax
-# Attribute to represent the threshold for misses in a row
-missthreshold = 15
 
 ##### FIXED #####
 # Object to represent the led strip
@@ -47,3 +45,5 @@ flags["REBOOT"] = False
 ledmin = 5
 ledmax = 255
 ledspan = ledmax - ledmin
+# Attribute to represent the previous led position
+last_x = 1

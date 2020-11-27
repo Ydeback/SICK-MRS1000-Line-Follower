@@ -28,17 +28,19 @@ def colorSwitcherSides(i, dim):
 
 # Method for the visualisation of the led strip
 def visual(x):
-    strip.clear_strip()
+    global last_x
+    strip.set_pixel_rgb(last_x, 0x000000)
     if Col["START"]:
         autoLight()
         color = colorSwitcher(Col["RGB"], Col["DIM"])
         colorSides = colorSwitcherSides(Col["RGB"], Col["DIM"])
         strip.set_pixel_rgb(44, colorSides)
         strip.set_pixel_rgb(48, colorSides)
-        strip.set_pixel_rgb(92, colorSides)
         strip.set_pixel_rgb(0, colorSides)
+        strip.set_pixel_rgb(92, colorSides)
         strip.set_pixel_rgb(x, color)
         strip.show()
+    last_x = x
 
 
 # visualisation for when the configuration of the LiDAR has failed
@@ -61,14 +63,6 @@ def connectFailVisual():
     strip.show()
     time.sleep(3)
     flags["REBOOT"] = True
-
-
-# Visualisation for when the target has been missed to many times in a row
-def missVisual():
-    if flags["MISS"] > missthreshold:
-        strip.clear_strip()
-        for x in range(nleds):
-            strip.set_pixel_rgb(x, colorSwither(3, Col["DIM"]))
 
 
 # Visualisation for when the system is set to reboot mode
@@ -114,17 +108,17 @@ def autoLight():
 # @return the brightness level appreciated from the surrounding environment
 def lightSensor():
     # Set the I/O for the pin to output
-    GPIO.setup(25, GPIO.OUT)
+    GPIO.setup(27, GPIO.OUT)
     # Set the output mode to LOW
-    GPIO.output(25, GPIO.LOW)
+    GPIO.output(27, GPIO.LOW)
     # Set pin mode to input
-    GPIO.setup(25, GPIO.IN)
+    GPIO.setup(27, GPIO.IN)
     # Get the current time
     currentTime = time.time()
     # Reset the time difference attribute
     diff = 0
     # While the input is LOW, get the time difference
-    while (GPIO.input(25) == GPIO.LOW):
+    while (GPIO.input(27) == GPIO.LOW):
         diff = time.time() - currentTime
     return (round(diff * 100000))
 
