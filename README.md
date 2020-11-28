@@ -1,7 +1,6 @@
-
 # Structure of the file system
 
-## __xx__.py
+### underscore files
 init files for the corresponding method files
 
 ## main.py
