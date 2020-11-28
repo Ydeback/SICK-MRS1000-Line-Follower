@@ -1,30 +1,29 @@
-# Boliden
 
-## Structure of the file system
+# Structure of the file system
 
-###__xx__.py
+##__xx__.py
 init files for the corresponding method files
 
-###main.py
-main file of the system for running all functionalities
+##main.py
+Main file of the system for running all functionalities
 
-###client.py
-file for, connection, configuring and receiving data from the connected device 
+##client.py
+File for, connection, configuring and receiving data from the connected device 
 
-###preprocess.py
+##preprocess.py
 Preprocess the data
 
-###filtering.py
-filter the distance data to the set accepted interval
+##filtering.py
+Filter the distance data to the set accepted interval
 
-###analysis.py
+##analysis.py
 Analyze and calculate the data
 
-###postprocess.py
+##postprocess.py
 Postprocessing of calculated data to LED format
 
-###visuals.py
+##visuals.py
 Output to the LED
 
-###buttons.py
+##buttons.py
 Button configuration and callbacks
