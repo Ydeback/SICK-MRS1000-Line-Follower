@@ -43,6 +43,7 @@ def rebootButton(channel):
 def startButton(channel):
     if Col["START"] == True:
         Col["START"] = False
+        strip.clear_strip()
     else:
         Col["START"] = True
     print(Col["START"])
