@@ -3,8 +3,9 @@
 import numpy as np
 
 # Upper bound for the distance interval
-upper = 12
+
+upper = 30
 
 # Lower bound for the distance interval
-lower = 0.5
+lower = 0.2
 

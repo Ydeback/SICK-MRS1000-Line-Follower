@@ -28,7 +28,8 @@ def colorSwitcherSides(i, dim):
 
 # Method for the visualisation of the led strip
 def visual(x):
-    global last_x
+    #global last_x
+    strip.clear_strip()
     strip.set_pixel_rgb(last_x, 0x000000)
     if Col["START"]:
         autoLight()
@@ -40,7 +41,7 @@ def visual(x):
         strip.set_pixel_rgb(92, colorSides)
         strip.set_pixel_rgb(x, color)
         strip.show()
-    last_x = x
+    #last_x = x
 
 
 # visualisation for when the configuration of the LiDAR has failed
@@ -78,6 +79,7 @@ def rebootVisual():
 # Method for the intervals of the auto dimming
 # @return the brightness of the leds
 def interval(x):
+
     if x <=80:
         return 5
     elif x > 80 and x <= 150:
@@ -93,7 +95,7 @@ def autoLight():
     if Col["AUTO"]:
 
         sensorvalue = lightSensor()
-        
+
         if sensorvalue > sensormax - 3:
             sensorvalue = sensormax - 3
 
@@ -107,6 +109,7 @@ def autoLight():
 # Method to receive the brightness input from the photoresistor sensor
 # @return the brightness level appreciated from the surrounding environment
 def lightSensor():
+
     # Set the I/O for the pin to output
     GPIO.setup(27, GPIO.OUT)
     # Set the output mode to LOW
@@ -116,7 +119,7 @@ def lightSensor():
     # Get the current time
     currentTime = time.time()
     # Reset the time difference attribute
-    diff = 0
+    diff = 0.0
     # While the input is LOW, get the time difference
     while (GPIO.input(27) == GPIO.LOW):
         diff = time.time() - currentTime

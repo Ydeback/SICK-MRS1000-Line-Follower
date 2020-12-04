@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 
 # Method for when the dim button is pressed
 def dimButton(channel):
+    print("DIM")
     Col["AUTO"] = False
     Col["DIM"] += diminc
     if Col["DIM"] > 255:
@@ -62,24 +63,22 @@ GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(26, GPIO.FALLING, callback = blueButton, bouncetime = bouncetime)
 
 # Initialize the color red button
-GPIO.setup(16 , GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(16, GPIO.FALLING, callback = redButton, bouncetime = bouncetime)
 
 # Initialize the color green button
-GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(5, GPIO.FALLING, callback = greenButton, bouncetime = bouncetime)
+#GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+#GPIO.add_event_detect(5, GPIO.FALLING, callback = greenButton, bouncetime = bouncetime)
 
 # Initialize the dim button
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(23, GPIO.FALLING, callback = dimButton, bouncetime = bouncetime)
 
 # Initialize the auto dim button
-GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(17, GPIO.FALLING, callback = autoButton, bouncetime = bouncetime)
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(12, GPIO.FALLING, callback = autoButton, bouncetime = bouncetime)
 
 # Initialize the reboot button
 GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(24, GPIO.FALLING, callback = rebootButton, bouncetime = bouncetime)
-
-
 

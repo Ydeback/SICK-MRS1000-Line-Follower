@@ -11,11 +11,13 @@ import os, datetime
 path1 = r"/home/pi/Desktop/CaseOne/"
 path2 = r"/home/pi/Desktop/CaseTwo/"
 path3 = r"/home/pi/Desktop/CaseThree/"
+path4 = r"/home/pi/Desktop/CaseFour/"
 timepath = r"/home/pi/Desktop/rebootTime.txt"
 filename1 = ""
 filename2 = ""
 filename3 = ""
-start = [True, True, True]
+filename4 = ""
+start = [True, True, True, True]
 
 def rebootTime():
     filename = timepath
@@ -54,6 +56,11 @@ def fname(path, case):
             global filename3
             filename3 = fileName(path)
         return filename3
+    if case == 4:
+        if start[3]:
+            global filename4
+            filename4 = fileName(path)
+        return filename4
 
 def testOne(*args):
     filename = fname(path1,1)
@@ -72,3 +79,7 @@ def testThree(*args):
     writeFile(filename, *args) 
 
 
+def testFour(*args):
+    filename = fname(path4,4)
+    start[3] = False
+    writeFile(filename, *args) 
