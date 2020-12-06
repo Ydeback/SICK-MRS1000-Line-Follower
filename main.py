@@ -10,6 +10,7 @@ from __MAIN__ import *
 
 
 def main():
+    rebootTime()
     global pos
     global length
     global cableangle
@@ -68,7 +69,8 @@ def main():
                 testTwo(posaftercheck, led)
 
                 # test case three, remove in final
-                testThree(header["RSSI"])
+                if remang == b'1':
+                    testThree(header["RSSI"])
                 # Update the led strip with the correct position
                 # representation
                 visual(led)

@@ -1,6 +1,6 @@
 # Methodset and initialization file for the testmode procedures.
 
-import os
+import os, datetime
 
 # Attribute to set the testmode
 # 1 = Layer, Array of distances, (bool) if there was a hit or miss of the layer 
@@ -11,10 +11,18 @@ import os
 path1 = r"/home/pi/Desktop/CaseOne/"
 path2 = r"/home/pi/Desktop/CaseTwo/"
 path3 = r"/home/pi/Desktop/CaseThree/"
+timepath = r"/home/pi/Desktop/rebootTime.txt"
 filename1 = ""
 filename2 = ""
 filename3 = ""
 start = [True, True, True]
+
+def rebootTime():
+    filename = timepath
+    f = open(filename,"a")
+    f.write(datetime.datetime.now().strftime("%c")+"\n")
+    f.close()
+
 
 def fileName(target):
     TARGET_DIR = target 
