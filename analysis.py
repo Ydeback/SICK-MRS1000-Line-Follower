@@ -3,22 +3,25 @@
 from __ANALYSIS__ import *
 
 # Calculate the position and place it in an array.
-# @return the ?, ? and ? ## ERIC FYLL I
+# @return the offset length to the centre of the lidar, the index of the
+# data point used, and the angle of the indexed data point
 def position(filtered, layer, angle, pos, cableangle):
     index = np.where(filtered == np.amin(filtered))
+    ind = index[0]
+    ind = ind[0]
     rad = angle*np.pi/180
     x = np.sin(rad)
-    y = np.multiply(x[index[0]], filtered[index[0]])
-    z = rad[index[0]]
-    cableangle[layer] = z[0]
-    pos[layer] = y[0]
-    return pos, index, cableangle
+    y = np.multiply(x[ind], filtered[ind])
+    z = rad[ind]
+    cableangle[layer] = z
+    pos[layer] = y
+    return pos, ind, cableangle
 
 
 # @return an array holding the length of the closest scan point
-def lengthArray(filtered, layer, index, length):
-    z = filtered[index[0]]
-    length[layer] = z[0]
+def lengthArray(filtered, layer, ind, length):
+    z = filtered[ind]
+    length[layer] = z
     return length
 
 

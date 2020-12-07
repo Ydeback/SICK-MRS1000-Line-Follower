@@ -6,12 +6,12 @@ from __MAIN__ import flags
 
 ## Configuration parameters for the LiDAR
 # Angles in degrees for the data output range
-startrange = 5
-stoprange = 5
+startrange = 0
+stoprange = -40 
 # Remission and angle (uint_8: 0 (OFF), 1 (RSSI), 8 (AINF), 9 (AINF & RSSI))
 remang = b'1'
 # Resolution of remission data (enum_8: 0 (8bit), 1 (16-bit))
-remres = b'0'
+remres = b'1'
 # Position data (bool: 0 (no), 1 (yes))
 position = b'0'
 # Device name (bool: 0 (no), 1 (yes))
