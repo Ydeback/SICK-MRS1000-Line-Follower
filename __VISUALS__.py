@@ -8,21 +8,22 @@ import RPi.GPIO as GPIO
 import time
 # Attribute to represent the rebootstate of the system
 from __MAIN__ import flags
-
+# Module for numerical calculations
+import numpy as np
 
 # Attribute to represent the number of leds to be used in the led strip
 nleds = 93
 # Attribute to represent the start color of the position led (1: Red, 2: Green, 3: Blue)
 startcolor = 2
 # Attribute to represent the led strength at the startup (range: 0 (dark), 255 (Bright))
-startdim = 40 
+startdim = 5 
 # Attributes to set the autodimming mode at startup (bool: True (on),False (off)
-startauto = False
-startLED = True
+startauto = True
+startLED = False
 # Attribute to set the amount of dim increase of the dim button
-diminc = 20
+diminc = 50
 # Attributes to adjust the external light sensor range
-sensormax = 180
+sensormax = 200
 sensormin = 0
 sensorspan = sensormin - sensormax
 
