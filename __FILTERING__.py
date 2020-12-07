@@ -7,5 +7,5 @@ import numpy as np
 upper = 30
 
 # Lower bound for the distance interval
-lower = 0.2
+lower = 0.2 
 

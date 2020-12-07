@@ -28,8 +28,7 @@ def colorSwitcherSides(i, dim):
 
 # Method for the visualisation of the led strip
 def visual(x):
-    #global last_x
-    strip.clear_strip()
+    global last_x
     strip.set_pixel_rgb(last_x, 0x000000)
     if Col["START"]:
         autoLight()
@@ -41,7 +40,9 @@ def visual(x):
         strip.set_pixel_rgb(92, colorSides)
         strip.set_pixel_rgb(x, color)
         strip.show()
-    #last_x = x
+    else:
+        strip.clear_strip()
+    last_x = x
 
 
 # visualisation for when the configuration of the LiDAR has failed
@@ -80,14 +81,14 @@ def rebootVisual():
 # @return the brightness of the leds
 def interval(x):
 
-    if x <=80:
+    if x <= 55:
         return 5
-    elif x > 80 and x <= 150:
-        return 80
-    elif x > 150 and x <= 230:
-        return 150
+    elif x > 55 and x <= 105:
+        return 55
+    elif x > 105 and x <= 155:
+        return 105
     else:
-        return 230
+        return 155
 
 
 # Method for setting the brightness from the input of the photoresistor sensor
@@ -95,7 +96,6 @@ def autoLight():
     if Col["AUTO"]:
 
         sensorvalue = lightSensor()
-
         if sensorvalue > sensormax - 3:
             sensorvalue = sensormax - 3
 
@@ -118,12 +118,16 @@ def lightSensor():
     GPIO.setup(27, GPIO.IN)
     # Get the current time
     currentTime = time.time()
-    # Reset the time difference attribute
-    diff = 0.0
-    # While the input is LOW, get the time difference
-    while (GPIO.input(27) == GPIO.LOW):
-        diff = time.time() - currentTime
-    return (round(diff * 100000))
+
+    difference = 0
+    for x in range(50):
+        # Reset the time difference attribute
+        diff = 0.0
+        # While the input is LOW, get the time difference
+        while (GPIO.input(27) == GPIO.LOW):
+            diff = time.time() - currentTime
+        difference = difference + (round(diff * 100000))
+    return difference/50
 
 
 # Method for the visualisation for when the system is in startup mode
