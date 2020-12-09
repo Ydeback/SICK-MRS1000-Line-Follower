@@ -5,11 +5,17 @@ import socket
 from __MAIN__ import flags
 
 ## Configuration parameters for the LiDAR
-# Angles in degrees for the data output range
+# Angles in degrees for the data output range, 0 degrees is in the direction
+# straight forward in the lidar direction. The start value is set as the
+# maximum angle to the right of 0 degrees and the stop value is set as the
+# angle to the left of 0 degrees.
 startrange = 0
-stoprange = -40 
-# Remission and angle (uint_8: 0 (OFF), 1 (RSSI), 8 (AINF), 9 (AINF & RSSI))
-remang = b'1'
+stoprange = 40
+
+## Parameters for activating and specifying the mode of data output from the
+## LiDAR
+# Data output of remission the corresponding angle (uint_8: 0 (OFF), 1 (RSSI), 8 (AINF), 9 (AINF & RSSI))
+remang = b'0'
 # Resolution of remission data (enum_8: 0 (8bit), 1 (16-bit))
 remres = b'1'
 # Position data (bool: 0 (no), 1 (yes))

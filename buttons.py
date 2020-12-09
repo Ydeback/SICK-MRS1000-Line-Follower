@@ -44,29 +44,33 @@ def startButton(channel):
 # Attribute to represent the debounce time used on the buttons
 bouncetime = 500 
 
+
+#### Below, uncomment the lines starting with GPIO to enable the button
+# functionalities ####
+
 # Set the numbering mode on the GPIO interface
-GPIO.setmode(GPIO.BCM)
+# GPIO.setmode(GPIO.BCM)
 
 # Initialize the start led button
-GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(6, GPIO.FALLING, callback = startButton, bouncetime = bouncetime)
+# GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(6, GPIO.FALLING, callback = startButton, bouncetime = bouncetime)
 
 # Initialize the auto dim button
-GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(12, GPIO.FALLING, callback = autoButton, bouncetime = bouncetime)
+# GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(12, GPIO.FALLING, callback = autoButton, bouncetime = bouncetime)
 
 # Initialize the color red button
-GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(16, GPIO.FALLING, callback = colorButton, bouncetime = bouncetime)
+# GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(16, GPIO.FALLING, callback = colorButton, bouncetime = bouncetime)
 
 # Initialize the dim button
-GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(23, GPIO.FALLING, callback = dimUpButton, bouncetime = int(bouncetime/2))
+# GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(23, GPIO.FALLING, callback = dimUpButton, bouncetime = int(bouncetime/2))
 
 # Initialize the reboot button
-GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(24, GPIO.FALLING, callback = rebootButton, bouncetime = bouncetime)
+# GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(24, GPIO.FALLING, callback = rebootButton, bouncetime = bouncetime)
 
 # Initialize the color blue button
-GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(26, GPIO.FALLING, callback = dimDownButton, bouncetime = int( bouncetime/2))
+# GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.add_event_detect(26, GPIO.FALLING, callback = dimDownButton, bouncetime = int( bouncetime/2))

@@ -18,7 +18,8 @@ def position(filtered, layer, angle, pos, cableangle):
     return pos, ind, cableangle
 
 
-# @return an array holding the length of the closest scan point
+# @return an array holding the length of the closest scan point for each
+# layer
 def lengthArray(filtered, layer, ind, length):
     z = filtered[ind]
     length[layer] = z

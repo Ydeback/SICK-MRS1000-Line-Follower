@@ -28,20 +28,37 @@ def colorSwitcherSides(i, dim):
 
 # Method for the visualisation of the led strip
 def visual(x):
+    # Use the variable holding the last position led value
     global last_x
+    # Clear the last led point
     strip.set_pixel_rgb(last_x, 0x000000)
+    # If the start button is pressed, start the visualisation
     if Col["START"]:
+        # Run the automatic dim function
         autoLight()
+        # Check what color is currently preset for the position led
         color = colorSwitcher(Col["RGB"], Col["DIM"])
+        # Check what color is currently preset for the fixed leds
         colorSides = colorSwitcherSides(Col["RGB"], Col["DIM"])
+        # Assign the color settings for the fixed leds
         strip.set_pixel_rgb(44, colorSides)
         strip.set_pixel_rgb(48, colorSides)
         strip.set_pixel_rgb(0, colorSides)
+        strip.set_pixel_rgb(1, colorSides)
+        strip.set_pixel_rgb(2, colorSides)
+        strip.set_pixel_rgb(90, colorSides)
+        strip.set_pixel_rgb(91, colorSides)
         strip.set_pixel_rgb(92, colorSides)
+        # Assign the color settings for the position led
         strip.set_pixel_rgb(x, color)
+        # Apply the settings and light up the led strip
         strip.show()
     else:
+        # If the start button is pressed when the leds is shown, clear the led
+        # strip
         strip.clear_strip()
+    # Set the current position led value as the previous position for the
+    # next run
     last_x = x
 
 
@@ -50,7 +67,7 @@ def configFailVisual():
     strip.clear_strip()
     for x in range(nleds):
         if (x%10==0):
-            strip.set_pixel_rgb(x, colorSwitcher(1, Col["DIM"]))
+            strip.set_pixel_rgb(x, colorSwitcher(3, Col["DIM"]))
     strip.show()
     time.sleep(3)
     flags["REBOOT"] = True
@@ -61,7 +78,7 @@ def connectFailVisual():
     strip.clear_strip()
     for x in range(nleds):
         if (x%10==0):
-            strip.set_pixel_rgb(x, colorSwitcher(3, Col["DIM"]))
+            strip.set_pixel_rgb(x, colorSwitcher(1, Col["DIM"]))
     strip.show()
     time.sleep(3)
     flags["REBOOT"] = True
@@ -80,7 +97,6 @@ def rebootVisual():
 # Method for the intervals of the auto dimming
 # @return the brightness of the leds
 def interval(x):
-
     if x <= 55:
         return 5
     elif x > 55 and x <= 105:
@@ -93,15 +109,23 @@ def interval(x):
 
 # Method for setting the brightness from the input of the photoresistor sensor
 def autoLight():
+    # If the auto button has been pressed
     if Col["AUTO"]:
-
+        
+        # Get the light sensor brightness value
         sensorvalue = lightSensor()
-        if sensorvalue > sensormax - 3:
-            sensorvalue = sensormax - 3
-
+        # Cap the value
+        if sensorvalue > sensormax:
+            sensorvalue = sensormax
+        
+        # Scale the brightness value to match the led strip brightness cap
         sensorvaluescaled = (sensorvalue - sensormax) / sensorspan
+        # Get a brightness value to the leds capped from specifies intervals
         light = interval(round(ledmin + (sensorvaluescaled * ledspan)))
+        # Assign the brightness value to the tuple index holding the
+        # brightness value
         Col["DIM"] = light
+        # Cap the brightness value
         if Col["DIM"] > 255:
             Col["DIM"] = 255
 
@@ -109,7 +133,6 @@ def autoLight():
 # Method to receive the brightness input from the photoresistor sensor
 # @return the brightness level appreciated from the surrounding environment
 def lightSensor():
-
     # Set the I/O for the pin to output
     GPIO.setup(27, GPIO.OUT)
     # Set the output mode to LOW
@@ -120,6 +143,7 @@ def lightSensor():
     currentTime = time.time()
 
     difference = 0
+    # A for loop for getting the mean of the photoresistor
     for x in range(50):
         # Reset the time difference attribute
         diff = 0.0

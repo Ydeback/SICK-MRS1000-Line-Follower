@@ -45,10 +45,12 @@ def toMeter(x):
 
 
 # Decoding of the received data stream
+# @return a tuple containing the decoded data
 def decodeDatagram(data):
     # Split the incoming data string
     datapoints = splitData(data)
 
+    # Add the relevant data to the correct tuple index
     header["NumberOfData"] = fromBinary(datapoints[25])
     header["Data"] = [toMeter(fromBinary(x)) for x in datapoints[26:26+header["NumberOfData"]]]
     header["StartingAngle"] = 90-fromBinary(datapoints[23])/10000
@@ -57,6 +59,5 @@ def decodeDatagram(data):
     header["Layer"] = datapoints[15]
     if remang == b'1':
         header["RSSI"] = [fromBinary(x) for x in datapoints[26+header["NumberOfData"]+6:26+header["NumberOfData"]*2+6]]
-    # header["AINF"] = datapoints[]
     return header
 

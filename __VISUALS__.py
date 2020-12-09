@@ -18,8 +18,9 @@ startcolor = 2
 # Attribute to represent the led strength at the startup (range: 0 (dark), 255 (Bright))
 startdim = 5 
 # Attributes to set the autodimming mode at startup (bool: True (on),False (off)
-startauto = True
-startLED = False
+startauto = False
+# Attributes to set the visualisation mode at startup (bool: True (on),False (off)
+startLED = True
 # Attribute to set the amount of dim increase of the dim button
 diminc = 50
 # Attributes to adjust the external light sensor range

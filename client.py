@@ -41,7 +41,7 @@ def fromDecToHex(x):
 
 # Set output data range
 # @return the answer from the LiDAR
-def setDataRange(s, startrange, stoprange):
+def setDataRange(s, stop, start):
     s.send(b'\x02sWN LMPoutputRange 1 9C4 ' + stop + b' ' + start + b'\x03')
     return s.recv(BUFFER)
 
@@ -95,7 +95,7 @@ def storePermanently(s):
     return s.recv(BUFFER)
 
 
-# Unit and encoding changes for the parameter variables
+# Unit and encoding changes for the read angle parameters
 stop = fromDecToHex((90 - startrange) * 10000)
 start = fromDecToHex((90 + stoprange) * 10000)
 
@@ -104,7 +104,7 @@ start = fromDecToHex((90 + stoprange) * 10000)
 def loadconfig(s):
     # Fill the tuple with the answers from the LiDAR
     config["Login"] = login(s)
-    config["SetDataRange"] = setDataRange(s, startrange, stoprange)
+    config["SetDataRange"] = setDataRange(s, stop, start)
     config["SetDataContent"] = setDataContent(s)
     config["SetEchoFilter"] = setEchoFilter(s)
     config["SetParticleFilter"] = setParticleFilter(s)
@@ -156,6 +156,7 @@ def failCheck(header):
 # @return the answer received from the LiDAR
 def run(s):
     s.send(b'\x02sEN LMDscandata 1\x03\0')
+    # Dismiss the answer sent from the LiDAR
     trash = s.recv(BUFFER)
 
 
@@ -169,8 +170,7 @@ def reboot(s):
         s.send(b'\x02sMN mSCreboot\x03')
     except socket.error:
         pass
-    ### To be activated in final version ###
-    # os.system("sudo shutdown -r now")
+    os.system("sudo shutdown -r now")
 
 
 # Method for receiving data from the LiDAR

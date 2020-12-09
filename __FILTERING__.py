@@ -2,10 +2,9 @@
 
 import numpy as np
 
-# Upper bound for the distance interval
+# Upper bound for the distance interval for the data output in meters
+upper = 15
 
-upper = 30
-
-# Lower bound for the distance interval
-lower = 0.2 
+# Lower bound for the distance interval for the data output in meters
+lower = 3 
 

@@ -4,35 +4,26 @@ from filtering import *
 from analysis import *
 from postprocess import *
 from visuals import *
-from testmode import *
 from __MAIN__ import *
 
-####
-# Test case three, remove in final
-rssiarray = {}
-indexarray = {}
-
 def main():
-
-    ####
-    # Part of test, remove in final
-    rebootTime()
-    ####
-
+    # Use the variables from the __MAIN__ file
     global pos
     global length
     global cableangle
+    
     # Run the system startup procedure
     s = startup()
     while True:
         # If the reboot button has been pushed, reboot the LiDAR.
         if flags["REBOOT"]:
             # Run reboot procedure of the LiDAR,
-            # also connected to Reboot.py, also rebooting Raspberry Pi.
+            # connected to reboot.py, also rebooting Raspberry Pi.
             reboot(s)
         else:
             
-            # Receive data from the LiDAR, @return binary data stream
+            # Receive data from the LiDAR,
+            # @return binary data stream
             data = receive(s)
             
             # Preprocess the received data, @return data split into named
@@ -62,22 +53,8 @@ def main():
                 # @return Array of the length of the hits from each layer
                 length = lengthArray(filtered, layer, index, length)
                 
-                ####
-                # Test case three, remove in final
-               
-                if remang == b'1':
-                    rssi = header["RSSI"]
-                    rssiarray[layer] = rssi[index]
-                ####
-
             # If all values from the four scan layers are collected
             if np.all((pos)):
-                
-
-                ####
-                # test case one, remove in final
-                # testOne(length, flags["MISS"]) 
-                ####
                 
                 # @return pos: The reset offset distance array for next run
                 # @return posaftercheck: The offset distance from all the
@@ -85,32 +62,15 @@ def main():
                 # @return hitlayer: The hit layer that the position is taken from
                 pos, posaftercheck, hitlayer = posLayerSafety(pos)
                 
-
-
                 # @return Which led in the led strip the position is
                 # represented by
                 led = convertPositionToLed(posaftercheck, length[hitlayer], cableangle[hitlayer], header)
                 
-                ####
-                # test case two, remove in final
-                # testTwo(posaftercheck, led)
-                ####
-
-                ####
-                # Test case three, remove in final
-                if remang == b'1':
-                    testThree(sorted(rssiarray.items()), hitlayer, length[2])
-                    # print(sorted(rssiarray.items()), hitlayer, length[2])
-                ####
-
-                ####
-                # Test case four, remove in final
-                # testFour(posaftercheck, led, length[hitlayer], hitlayer)
-                ####
-
                 # Update the led strip with the correct position
                 visual(led)
 
+# Only run the code if the main file itself has been run, not from where it has
+# been imported
 if __name__ == '__main__':
     main()
     
