@@ -1,5 +1,12 @@
-# Structure of the file system
+# Using the system
+When all the dependencies have been installed and setup accordingly the system is ready to be run by executing the main.py file using python3.
 
+# Dependencies
+Python3
+apa102_pi
+numpy
+
+# Structure of the file system
 #### underscore files
 init files for the corresponding method files
 
